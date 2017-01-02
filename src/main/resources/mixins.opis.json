@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.5.7",
+  "package": "mcp.mobius.opis.mixin",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.opis.refmap.json",
+  "priority": 1111,
+  "mixins": [
+    "MixinWorld"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

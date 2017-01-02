@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Opis",
+  "name": "Opis",
+  "description": "Contextual server profiler",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["ProfMobius"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
