@@ -1,6 +1,7 @@
 package mcp.mobius.opis.data.profilers;
 
 import java.util.HashMap;
+import mcp.mobius.opis.OpisMod;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -38,6 +39,10 @@ public class ProfilerDimTick extends ProfilerAbstract implements IProfilerBase {
         }
 
         clock.stop();
-        data.get(world.provider.getDimension()).addValue(clock.getDelta());
+        try {
+            data.get(world.provider.getDimension()).addValue(clock.getDelta());
+        } catch (Exception e) {
+            OpisMod.LOGGER.warn(String.format("Error while profiling dimension tick %s\n", key));
+        }
     }
 }

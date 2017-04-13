@@ -1,6 +1,7 @@
 package mcp.mobius.opis.data.profilers;
 
 import java.util.HashMap;
+import mcp.mobius.opis.OpisMod;
 
 import net.minecraftforge.common.DimensionManager;
 
@@ -39,6 +40,10 @@ public class ProfilerDimBlockTick extends ProfilerAbstract implements IProfilerB
         }
 
         clock.stop();
-        data.get(dim).addValue(clock.getDelta());
+        try {
+            data.get(dim).addValue(clock.getDelta());
+        } catch (Exception e) {
+            OpisMod.LOGGER.warn(String.format("Error while profiling dimension block tick %s\n", key));
+        }
     }
 }

@@ -2,7 +2,7 @@ package mcp.mobius.opis.data.profilers;
 
 import java.util.WeakHashMap;
 
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 import net.minecraft.entity.Entity;
 
@@ -32,9 +32,11 @@ public class ProfilerRenderEntity extends ProfilerAbstract {
     public void stop(Object key) {
         clock.stop();
         try {
-            data.get(key).addValue(clock.getDelta());
+            if (key instanceof Entity) {
+                data.get(((Entity)key)).addValue(clock.getDelta());
+            }
         } catch (Exception e) {
-            ModOpis.log.warn(String.format("Error while profiling entity %s\n", key));
+            OpisMod.LOGGER.warn(String.format("Error while profiling render entity %s\n", key));
         }
     }
 }

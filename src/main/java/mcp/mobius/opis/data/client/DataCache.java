@@ -7,10 +7,10 @@ import mcp.mobius.opis.network.enums.*;
 
 public class DataCache implements IMessageHandler {
 
-    private static final DataCache instance = new DataCache();
+    private static final DataCache INSTANCE = new DataCache();
 
     public static DataCache instance() {
-        return instance;
+        return INSTANCE;
     }
     
     private long clockScrew = 0;

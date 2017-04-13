@@ -2,7 +2,7 @@ package mcp.mobius.opis.data.monitors;
 
 import java.util.HashMap;
 import java.util.Map;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 
 import net.minecraft.entity.Entity;
 
@@ -58,7 +58,7 @@ public class MonitoredEntityList<E> extends MonitoredList<E> {
     @Override
     public void printCount() {
         this.count.keySet().forEach((s) -> {
-            ModOpis.log.info(String.format("%s : %s", s, this.count.get(s)));
+            OpisMod.LOGGER.info(String.format("%s : %s", s, this.count.get(s)));
         });
     }
 

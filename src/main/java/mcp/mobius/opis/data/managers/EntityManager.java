@@ -20,7 +20,10 @@ import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntityPerClass;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
+import mcp.mobius.opis.network.PacketManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum EntityManager {
     INSTANCE;
@@ -172,6 +175,37 @@ public enum EntityManager {
         return cumData;
     }
 
+    @SideOnly(value = Side.SERVER)
+    public boolean teleportPlayer(EntityPlayerMP player, CoordinatesBlock target) {
+        if (player.world.provider.getDimension() != target.dim) {
+            PacketManager.sendChatMsg("\u00A7oCannot teleport to a location in another world.", player);
+            return false;
+        }
+        player.setPositionAndUpdate(target.x + 1.5, target.y, target.z + 1.5);
+        return true;
+    }
+
+    @SideOnly(value = Side.SERVER)
+    public boolean teleportEntity(Entity src, Entity trg, EntityPlayerMP msgtrg) {
+        if ((src == null) && (msgtrg != null)) {
+            PacketManager.sendChatMsg(String.format("\u00A7oCannot find source entity %s", src), msgtrg);
+            return false;
+        }
+        if ((trg == null) && (msgtrg != null)) {
+            PacketManager.sendChatMsg(String.format("\u00A7oCannot find target entity %s", src), msgtrg);
+            return false;
+        }
+        if (src != null && trg != null) {
+            if (src.world.provider.getDimension() != trg.world.provider.getDimension()) {
+                PacketManager.sendChatMsg("\u00A7oCannot teleport to a location in another world.", msgtrg);
+                return false;
+            }
+            src.setLocationAndAngles(trg.posX, trg.posY, trg.posZ, src.rotationYaw, src.rotationPitch);
+            return true;
+        }
+        return false;
+    }
+
     public Entity getEntity(int eid, int dim) {
         World world = DimensionManager.getWorld(dim);
         if (world == null) {
@@ -252,7 +286,7 @@ public enum EntityManager {
     }
 
     public ArrayList<DataEntity> getAllPlayers() {
-        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList();
+        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
 
         ArrayList<DataEntity> outList = new ArrayList<>();
 

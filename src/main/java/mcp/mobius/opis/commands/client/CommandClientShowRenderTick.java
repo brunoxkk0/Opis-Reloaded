@@ -10,13 +10,13 @@ import net.minecraft.server.MinecraftServer;
 public class CommandClientShowRenderTick extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opisctick";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        return "";
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opisctick";
     }
 
     @Override
@@ -24,7 +24,6 @@ public class CommandClientShowRenderTick extends CommandBase {
         if (icommandsender instanceof EntityPlayerMP) {
             PacketManager.validateAndSend(new NetDataCommand(Message.CLIENT_SHOW_RENDER_TICK), (EntityPlayerMP) icommandsender);
         }
-        //((EntityPlayerMP)icommandsender).playerNetServerHandler.sendPacketToPlayer(NetDataCommand.create(Message.CLIENT_SHOW_RENDER_TICK));
     }
 
     @Override
@@ -36,5 +35,4 @@ public class CommandClientShowRenderTick extends CommandBase {
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
-
 }

@@ -52,7 +52,7 @@ public class PanelInbound extends JPanelMsgHandler implements ITabPanel {
                         packet.rate,
                         packet.size
                     });
-            });
+                });
 
                 this.getTable().dataUpdated(row);
 

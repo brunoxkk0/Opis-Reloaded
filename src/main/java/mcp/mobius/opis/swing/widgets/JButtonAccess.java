@@ -12,18 +12,18 @@ public class JButtonAccess extends JButton {
     public JButtonAccess(AccessLevel level) {
         super();
         this.al = level;
-        SwingUI.registeredButtons.add(this);
+        SwingUI.instance().registeredButtons.add(this);
     }
 
     public JButtonAccess(String label) {
         super(label);
-        SwingUI.registeredButtons.add(this);
+        SwingUI.instance().registeredButtons.add(this);
     }
 
     public JButtonAccess(String label, AccessLevel level) {
         super(label);
         this.al = level;
-        SwingUI.registeredButtons.add(this);
+        SwingUI.instance().registeredButtons.add(this);
     }
 
     public void setAccessLevel(AccessLevel level) {

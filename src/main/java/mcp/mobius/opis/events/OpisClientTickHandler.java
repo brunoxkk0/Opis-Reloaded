@@ -13,13 +13,13 @@ import com.google.common.collect.HashBasedTable;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import mcp.mobius.opis.data.profilers.ProfilerSection;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
-import mcp.mobius.opis.data.holders.newtypes.DataBlockRender;
-import mcp.mobius.opis.data.holders.newtypes.DataEntityRender;
-import mcp.mobius.opis.data.holders.newtypes.DataEvent;
-import mcp.mobius.opis.data.holders.newtypes.DataTileEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataBlockRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataRenderEvent;
+import mcp.mobius.opis.data.holders.clienttypes.DataTileEntityRender;
 import mcp.mobius.opis.data.profilers.ProfilerEvent;
 import mcp.mobius.opis.data.profilers.ProfilerRenderBlock;
 import mcp.mobius.opis.data.profilers.ProfilerRenderEntity;
@@ -28,6 +28,7 @@ import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.SelectedTab;
+import mcp.mobius.opis.swing.SwingUI;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderTileEnts;
@@ -50,12 +51,12 @@ public enum OpisClientTickHandler {
 
         // One second timer
         if (timer1000.isDone()) {
-            if (ModOpis.swingOpen) {
+            if (SwingUI.instance().swingOpen) {
                 PacketManager.sendToServer(new PacketReqData(Message.STATUS_PING, new SerialLong(System.nanoTime())));
             }
         }
 
-        if (ModOpis.profilerRunClient) {
+        if (OpisMod.profilerRunClient) {
             ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).getBtnRunRender().setText("Running...");
             ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).getBtnRunRender().setText("Running...");
             ((PanelRenderHandlers) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS))).getBtnRunRender().setText("Running...");
@@ -69,11 +70,11 @@ public enum OpisClientTickHandler {
 
         profilerUpdateTickCounter++;
 
-        if (profilerRunningTicks < ModOpis.profilerMaxTicks && ModOpis.profilerRunClient) {
+        if (profilerRunningTicks < OpisMod.profilerMaxTicks && OpisMod.profilerRunClient) {
             profilerRunningTicks++;
-        } else if (profilerRunningTicks >= ModOpis.profilerMaxTicks && ModOpis.profilerRunClient) {
+        } else if (profilerRunningTicks >= OpisMod.profilerMaxTicks && OpisMod.profilerRunClient) {
             profilerRunningTicks = 0;
-            ModOpis.profilerRunClient = false;
+            OpisMod.profilerRunClient = false;
             ProfilerSection.desactivateAll(Side.CLIENT);
 
             System.out.printf("Profiling done\n");
@@ -94,7 +95,7 @@ public enum OpisClientTickHandler {
                 tileEntData.add(dataTe);
                 tileEntTotal += dataTe.update.timing;
             } catch (Exception e) {
-                ModOpis.log.warn(String.format("Error while adding entity %s to the list", te));
+                OpisMod.LOGGER.warn(String.format("Error while adding entity %s to the list", te));
             }
         }
 
@@ -113,7 +114,7 @@ public enum OpisClientTickHandler {
                 entData.add(dataEnt);
                 entTotal += dataEnt.update.timing;
             } catch (Exception e) {
-                ModOpis.log.warn(String.format("Error while adding entity %s to the list", ent));
+                OpisMod.LOGGER.warn(String.format("Error while adding entity %s to the list", ent));
             }
         }
 
@@ -126,22 +127,22 @@ public enum OpisClientTickHandler {
         //====================================================================================	
         //((PanelRenderHandlers)(TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS))).setTable(TickHandlerManager.getCumulatedStatsRender());
         //====================================================================================			
-        ArrayList<DataEvent> timingEvents = new ArrayList<>();
+        ArrayList<DataRenderEvent> timingEvents = new ArrayList<>();
         HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).data;
         HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataMod;
         eventData.cellSet().forEach((cell) -> {
-            timingEvents.add(new DataEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
+            timingEvents.add(new DataRenderEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
         });
         ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).setTable(timingEvents);
 
         //====================================================================================			
-        ArrayList<DataBlockRender> blockData = new ArrayList<>();
+        //ArrayList<DataBlockRender> blockData = new ArrayList<>();
         ((ProfilerRenderBlock) ProfilerSection.RENDER_BLOCK.getProfiler()).data.keySet().forEach((coord) -> {
             try {
                 DataBlockRender dataBlock = new DataBlockRender().fill(coord);
-                blockData.add(dataBlock);
+                //blockData.add(dataBlock);
             } catch (Exception e) {
-                ModOpis.log.warn(String.format("Error while adding block %s to the list", coord));
+                OpisMod.LOGGER.warn(String.format("Error while adding block %s to the list", coord));
             }
         }); /*
         Collections.sort(blockData);

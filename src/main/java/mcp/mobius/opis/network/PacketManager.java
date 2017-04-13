@@ -119,22 +119,22 @@ public class PacketManager {
             input.skipBytes(1); // skip the packet identifier byte
             packet.decode(input);
 
-            if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            if (FMLCommonHandler.instance().getSide().isClient()) {
                 actionClient(packet);
             } else {
                 actionServer(ctx, packet);
             }
         }
 
-        @SideOnly(CLIENT)
+        @SideOnly(Side.CLIENT)
         private void actionClient(PacketBase packet) {
             Minecraft mc = Minecraft.getMinecraft();
-            packet.actionClient(mc.theWorld, mc.thePlayer);
+            packet.actionClient(mc.world, mc.player);
         }
 
         private void actionServer(ChannelHandlerContext ctx, PacketBase packet) {
             EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
-            packet.actionServer(player.worldObj, player);
+            packet.actionServer(player.world, player);
         }
 
         @Override
@@ -172,7 +172,7 @@ public class PacketManager {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, PacketBase packet) throws Exception {
             Minecraft mc = Minecraft.getMinecraft();
-            packet.actionClient(mc.theWorld, mc.thePlayer);
+            packet.actionClient(mc.world, mc.player);
         }
     }
 
@@ -182,7 +182,7 @@ public class PacketManager {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, PacketBase packet) throws Exception {
             EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
-            packet.actionServer(player.worldObj, player);
+            packet.actionServer(player.world, player);
         }
     }
 

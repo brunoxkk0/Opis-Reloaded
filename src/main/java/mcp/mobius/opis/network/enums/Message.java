@@ -3,6 +3,7 @@ package mcp.mobius.opis.network.enums;
 import static mcp.mobius.opis.network.enums.AccessLevel.*;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import mcp.mobius.opis.events.PlayerTracker;
@@ -121,8 +122,8 @@ public enum Message {
         return PlayerTracker.INSTANCE.getPlayerAccessLevel(player).ordinal() >= this.accessLevel.ordinal();
     }
 
-    public boolean canPlayerUseCommand(String name) {
-        return PlayerTracker.INSTANCE.getPlayerAccessLevel(name).ordinal() >= this.accessLevel.ordinal();
+    public boolean canPlayerUseCommand(UUID uuid) {
+        return PlayerTracker.INSTANCE.getPlayerAccessLevel(uuid).ordinal() >= this.accessLevel.ordinal();
     }
 
     public boolean isDisplayActive(SelectedTab tab) {

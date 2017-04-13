@@ -1,4 +1,4 @@
-package mcp.mobius.opis.data.holders.newtypes;
+package mcp.mobius.opis.data.holders.clienttypes;
 
 import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.WeakHashMap;
+import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
+import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import net.minecraftforge.common.DimensionManager;
 
 public class DataTileEntityRender extends DataBlockTileEntity {

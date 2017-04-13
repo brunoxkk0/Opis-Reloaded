@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.TabPanelRegistrar;
@@ -81,10 +81,10 @@ public enum StringCache implements IMessageHandler {
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         switch (msg) {
             case STATUS_STRINGUPD: {
-                ModOpis.log.info(String.format("Received partial String Cache update : [ %d ] [ %s ]", ((DataStringUpdate)rawdata.value).index, ((DataStringUpdate)rawdata.value).str));
+                OpisMod.LOGGER.debug(String.format("Received partial String Cache update : [ %d ] [ %s ]", ((DataStringUpdate)rawdata.value).index, ((DataStringUpdate)rawdata.value).str));
 
                 DataStringUpdate data = (DataStringUpdate) rawdata.value;
-                ModOpis.log.info(String.format("++++ Received String Cache update : [%d] %s", data.index, data.str));			
+                OpisMod.LOGGER.debug(String.format("++++ Received String Cache update : [%d] %s", data.index, data.str));			
                 try {
                     this.cache.put(data.index, data.str);
                 } catch (IllegalArgumentException e) {
@@ -98,9 +98,9 @@ public enum StringCache implements IMessageHandler {
                 break;
             }
             case STATUS_STRINGUPD_FULL: {
-                ModOpis.log.info(String.format("Received full String Cache update containing %d entries", rawdata.array.size()));
+                OpisMod.LOGGER.debug(String.format("Received full String Cache update containing %d entries", rawdata.array.size()));
                 rawdata.array.stream().map((idata) -> (DataStringUpdate) idata).forEachOrdered((data) -> {
-                    ModOpis.log.info(String.format("++++ Received String Cache update : [%d] %s", data.index, data.str));
+                    OpisMod.LOGGER.debug(String.format("++++ Received String Cache update : [%d] %s", data.index, data.str));
                     try {
                         this.cache.put(data.index, data.str);
                     } catch (IllegalArgumentException e) {

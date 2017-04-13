@@ -10,13 +10,13 @@ import net.minecraft.server.MinecraftServer;
 public class CommandClientStart extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opiscstart";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        return "";
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opiscstart";
     }
 
     @Override
@@ -24,7 +24,6 @@ public class CommandClientStart extends CommandBase {
         if (icommandsender instanceof EntityPlayerMP) {
             PacketManager.validateAndSend(new NetDataCommand(Message.CLIENT_START_PROFILING), (EntityPlayerMP) icommandsender);
         }
-        //((EntityPlayerMP)icommandsender).playerNetServerHandler.sendPacketToPlayer(NetDataCommand.create(Message.CLIENT_START_PROFILING));
     }
 
     @Override

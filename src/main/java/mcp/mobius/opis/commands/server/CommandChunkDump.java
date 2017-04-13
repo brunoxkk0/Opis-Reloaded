@@ -1,6 +1,6 @@
 package mcp.mobius.opis.commands.server;
 
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
@@ -13,18 +13,18 @@ import net.minecraft.world.chunk.Chunk;
 public class CommandChunkDump extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "chunkdump";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
+    public String getUsage(ICommandSender icommandsender) {
         return "";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        ModOpis.log.log(Level.INFO, "== CHUNK DUMP ==");
+        OpisMod.LOGGER.log(Level.INFO, "== CHUNK DUMP ==");
 
         HashMap<ChunkPos, Boolean> chunkStatus = new HashMap<>();
 
@@ -33,7 +33,7 @@ public class CommandChunkDump extends CommandBase {
             Set<ChunkPos> persistantChunks = DimensionManager.getWorld(worldID).getPersistentChunks().keySet();
             Collection<Chunk> chunks = DimensionManager.getWorld(worldID).getChunkProvider().getLoadedChunks();
             chunks.stream().map((chunk) -> {
-                ModOpis.log.log(Level.INFO, String.format("Dim : %s, %s, Forced : %s", worldID, chunk, persistantChunks.contains(chunk.getChunkCoordIntPair())));
+                OpisMod.LOGGER.log(Level.INFO, String.format("Dim : %s, %s, Forced : %s", worldID, chunk, persistantChunks.contains(chunk.getChunkCoordIntPair())));
                 return chunk;
             }).forEachOrdered((chunk) -> {
                 chunkStatus.put(chunk.getChunkCoordIntPair(), persistantChunks.contains(chunk.getChunkCoordIntPair()));

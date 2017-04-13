@@ -1,7 +1,7 @@
 package mcp.mobius.opis.data.profilers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import mcp.mobius.opis.OpisMod;
 
 import net.minecraft.network.Packet;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket;
@@ -15,8 +15,6 @@ public class ProfilerPacket extends ProfilerAbstract {
     public long dataAmount = 0;
     public HashMap<String, DataPacket> data = new HashMap<>();
     public HashMap<String, DataPacket250> data250 = new HashMap<>();
-
-    public ArrayList<DataPacket> jabbaSpec = new ArrayList<>();
 
     public void startInterval() {
         data.values().forEach((packet) -> {
@@ -53,21 +51,24 @@ public class ProfilerPacket extends ProfilerAbstract {
 
     @Override
     public void stop(Object msg) {
-        if ((msg != null) && (Helpers.getEffectiveSide() == Side.SERVER)) {
-            if (msg instanceof FMLProxyPacket) {
-                FMLProxyPacket pkt = (FMLProxyPacket) msg;
-                String channel = pkt.channel();
-                int pktsize = pkt.payload().capacity();
-                dataAmount += pktsize;
+        try {
+            if ((msg != null) && (Helpers.getEffectiveSide() == Side.SERVER)) {
+                if (msg instanceof FMLProxyPacket) {
+                    FMLProxyPacket pkt = (FMLProxyPacket) msg;
+                    String channel = pkt.channel();
+                    int pktsize = pkt.payload().capacity();
+                    dataAmount += pktsize;
 
-                try {
-                    data250.get(channel).fill(pkt, pktsize);
-                } catch (Exception e) {
-                    data250.put(channel, new DataPacket250(channel));
-                    data250.get(channel).fill(pkt, pktsize);
+                    try {
+                        data250.get(channel).fill(pkt, pktsize);
+                    } catch (Exception e) {
+                        data250.put(channel, new DataPacket250(channel));
+                        data250.get(channel).fill(pkt, pktsize);
+                    }
                 }
             }
+        } catch (Exception e) {
+            OpisMod.LOGGER.warn(String.format("Error while profiling packet %s\n", msg));
         }
     }
-
 }

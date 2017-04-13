@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
+import mcp.mobius.opis.data.holders.clienttypes.DataRenderEvent;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataEvent;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
@@ -45,7 +46,7 @@ public class PanelEventClient extends JPanel implements ITabPanel, IMessageHandl
         scrollPane.setViewportView(table);
     }
 
-    public void setTable(ArrayList<DataEvent> data) {
+    public void setTable(ArrayList<DataRenderEvent> data) {
 
         DefaultTableModel model = table.getModel();
         int row = this.updateData(table, model, DataEvent.class);

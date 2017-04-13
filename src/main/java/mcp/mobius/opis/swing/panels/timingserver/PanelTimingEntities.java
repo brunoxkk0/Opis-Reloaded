@@ -91,7 +91,7 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
                 int row = this.getTable().clearTable(DataEntity.class);
 
                 rawdata.array.stream().map((o) -> (DataEntity) o).forEachOrdered((data) -> {
-                    model.addRow(new Object[]{data.name,
+                    model.addRow(new Object[]{data.name.str,
                         data.eid,
                         data.pos.dim,
                         String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),

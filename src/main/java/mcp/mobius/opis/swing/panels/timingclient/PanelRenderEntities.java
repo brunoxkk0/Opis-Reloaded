@@ -12,7 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
-import mcp.mobius.opis.data.holders.newtypes.DataEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataEntityRender;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;

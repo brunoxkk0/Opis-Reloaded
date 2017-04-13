@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
@@ -10,9 +11,14 @@ import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEntities;
 import mcp.mobius.opis.swing.widgets.JTableStats;
 
 import mcp.mobius.opis.api.TabPanelRegistrar;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.TargetEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
+import mcp.mobius.opis.helpers.ModIdentification;
+import mcp.mobius.opis.map.JourneyMapPlugin;
+import mcp.mobius.opis.map.factory.MarkerOverlayFactory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
 
 public class ActionTimingEntities implements ActionListener {
 
@@ -28,8 +34,13 @@ public class ActionTimingEntities implements ActionListener {
         DataEntity data = (DataEntity) table.getTableData().get(indexData);
 
         if (e.getSource() == panel.getBtnCenter()) {
-            PacketManager.sendToServer(new PacketReqData(Message.OVERLAY_CHUNK_ENTITIES));
-            PacketManager.sendToServer(new PacketReqData(Message.LIST_CHUNK_ENTITIES, data.pos.asCoordinatesChunk()));
+            CoordinatesBlock coord = data.pos;
+            if (OpisMod.mappingEnabled) {
+                BlockPos pos = new BlockPos(coord.x, coord.y, coord.z);
+                MarkerOverlayFactory.create(JourneyMapPlugin.getAPI(), pos, data.name.str, " X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
+            }
+            //PacketManager.sendToServer(new PacketReqData(Message.OVERLAY_CHUNK_ENTITIES));
+            //PacketManager.sendToServer(new PacketReqData(Message.LIST_CHUNK_ENTITIES, data.pos.asCoordinatesChunk()));
         }
 
         if (e.getSource() == panel.getBtnTeleport()) {

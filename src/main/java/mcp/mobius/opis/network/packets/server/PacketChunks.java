@@ -9,6 +9,9 @@ public class PacketChunks extends PacketBase {
 
     public int dim;
 
+    public PacketChunks() {
+    }
+
     @Override
     public void encode(ByteArrayDataOutput output) {
         // TODO Auto-generated method stub

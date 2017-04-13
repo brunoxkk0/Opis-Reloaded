@@ -1,7 +1,7 @@
 package mcp.mobius.opis.commands.server;
 
 import mcp.mobius.opis.events.PlayerTracker;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -11,13 +11,13 @@ import net.minecraft.util.text.TextComponentString;
 public class CommandFrequency extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opisdelay";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        return "";
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opisdelay <delay>";
     }
 
     @Override
@@ -26,8 +26,8 @@ public class CommandFrequency extends CommandBase {
             return;
         }
         try {
-            ModOpis.profilerDelay = Integer.valueOf(astring[0]);
-            icommandsender.addChatMessage(new TextComponentString(String.format("\u00A7oOpis delay set to %s ticks.", astring[0])));
+            OpisMod.profilerDelay = Integer.valueOf(astring[0]);
+            icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oOpis delay set to %s ticks.", astring[0])));
 
         } catch (NumberFormatException e) {
         }
@@ -43,11 +43,10 @@ public class CommandFrequency extends CommandBase {
         if (sender instanceof DedicatedServer) {
             return true;
         }
-        //if ((sender instanceof EntityPlayerMP) && ((EntityPlayerMP)sender).playerNetServerHandler.netManager instanceof MemoryConnection) return true;
         if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) {
             return true;
         }
-        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getName());
+        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getId());
     }
 
 }

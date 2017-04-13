@@ -33,6 +33,7 @@ public abstract class PacketBase {
 
     public abstract void decode(ByteArrayDataInput input);
 
+    
     @SideOnly(Side.CLIENT)
     public void actionClient(World world, EntityPlayer player) {
         throw new RuntimeException("Packet is not going the right way ! Server side packet seen client side.");

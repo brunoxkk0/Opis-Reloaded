@@ -1,6 +1,6 @@
 package mcp.mobius.opis.data.holders;
 
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
@@ -16,14 +16,14 @@ import mcp.mobius.opis.data.holders.newtypes.DataAmountRate;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntityPerClass;
 import mcp.mobius.opis.data.holders.newtypes.DataByteRate;
 import mcp.mobius.opis.data.holders.newtypes.DataByteSize;
-import mcp.mobius.opis.data.holders.newtypes.DataBlockRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataBlockRender;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTick;
 import mcp.mobius.opis.data.holders.newtypes.DataChunk;
 import mcp.mobius.opis.data.holders.newtypes.DataChunkEntities;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntityPerClass;
-import mcp.mobius.opis.data.holders.newtypes.DataEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataEntityRender;
 import mcp.mobius.opis.data.holders.newtypes.DataEvent;
 import mcp.mobius.opis.data.holders.newtypes.DataNetworkTick;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket;
@@ -32,7 +32,7 @@ import mcp.mobius.opis.data.holders.newtypes.DataStringUpdate;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataThread;
 import mcp.mobius.opis.data.holders.newtypes.DataTileEntity;
-import mcp.mobius.opis.data.holders.newtypes.DataTileEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataTileEntityRender;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.holders.newtypes.DataTimingMillisecond;
 import mcp.mobius.opis.data.holders.stats.StatAbstract;
@@ -94,7 +94,7 @@ public enum DataType {
     public static DataType getForClass(Class clazz) {
         DataType type = bimap.inverse().get(clazz);
         if (type == null) {
-            ModOpis.log.warn(String.format("Class %s was not registered with the DataType enum", clazz));
+            OpisMod.LOGGER.warn(String.format("Class %s was not registered with the DataType enum", clazz));
         }
         return type;
     }
@@ -105,11 +105,11 @@ public enum DataType {
             DataType type = DataType.values()[ordinal];
             retVal = bimap.get(type);
             if (retVal == null) {
-                ModOpis.log.warn(String.format("DataType doesn't have a class registered for %s", type));
+                OpisMod.LOGGER.warn(String.format("DataType doesn't have a class registered for %s", type));
             }
         } catch (Exception e) {
             retVal = null;
-            ModOpis.log.warn(String.format("Index out of bound for ordinal %d in DataType", ordinal));
+            OpisMod.LOGGER.warn(String.format("Index out of bound for ordinal %d in DataType", ordinal));
         }
         return retVal;
     }

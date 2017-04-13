@@ -13,13 +13,13 @@ import net.minecraftforge.common.DimensionManager;
 public class CommandKill extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opiskill";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        return "";
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opiskill <dimid> <entityid>";
     }
 
     @Override
@@ -32,18 +32,18 @@ public class CommandKill extends CommandBase {
 
         World world = DimensionManager.getWorld(dim);
         if (world == null) {
-            icommandsender.addChatMessage(new TextComponentString(String.format("\u00A7oCannot find dim %d in world %d", dim)));
+            icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oCannot find dim %d", dim)));
             return;
         }
 
         Entity entity = world.getEntityByID(eid);
         if (entity == null) {
-            icommandsender.addChatMessage(new TextComponentString(String.format("\u00A7oCannot find entity %d in dim %d", eid, dim)));
+            icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oCannot find entity %d in dim %d", eid, dim)));
             return;
         }
 
         entity.setDead();
-        icommandsender.addChatMessage(new TextComponentString(String.format("\u00A7oKilled entity %d in dim %d", eid, dim)));
+        icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oKilled entity %d in dim %d", eid, dim)));
     }
 
     @Override
@@ -56,11 +56,10 @@ public class CommandKill extends CommandBase {
         if (sender instanceof DedicatedServer) {
             return true;
         }
-        //if ((sender instanceof EntityPlayerMP) && ((EntityPlayerMP)sender).playerNetServerHandler.netManager instanceof MemoryConnection) return true;
         if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) {
             return true;
         }
-        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getName());
+        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getId());
     }
 
 }

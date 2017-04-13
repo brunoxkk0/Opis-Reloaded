@@ -5,7 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 
 import java.util.*;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 
 public class MonitoredTileList<E> extends MonitoredList<E> {
 
@@ -71,7 +71,7 @@ public class MonitoredTileList<E> extends MonitoredList<E> {
     @Override
     public void printCount() {
         this.count.cellSet().forEach((c) -> {
-            ModOpis.log.info(String.format("%s | %s : %s", c.getRowKey(), c.getColumnKey(), c.getValue()));
+            OpisMod.LOGGER.info(String.format("%s | %s : %s", c.getRowKey(), c.getColumnKey(), c.getValue()));
         });
 
     }

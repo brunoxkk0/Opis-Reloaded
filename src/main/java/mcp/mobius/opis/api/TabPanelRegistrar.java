@@ -1,7 +1,6 @@
 package mcp.mobius.opis.api;
 
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JPanel;

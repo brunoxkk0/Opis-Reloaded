@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
-import mcp.mobius.opis.data.holders.newtypes.DataTileEntityRender;
+import mcp.mobius.opis.data.holders.clienttypes.DataTileEntityRender;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;

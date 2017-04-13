@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 
 public class ProfilerEntityUpdate extends ProfilerAbstract implements IProfilerBase {
@@ -22,7 +22,7 @@ public class ProfilerEntityUpdate extends ProfilerAbstract implements IProfilerB
     @Override
     public void start(Object key) {
         Entity entity = (Entity) key;
-        if (entity.worldObj.isRemote) {
+        if (entity.world.isRemote) {
             return;
         }
 
@@ -35,7 +35,7 @@ public class ProfilerEntityUpdate extends ProfilerAbstract implements IProfilerB
     @Override
     public void stop(Object key) {
         Entity entity = (Entity) key;
-        if (entity.worldObj.isRemote) {
+        if (entity.world.isRemote) {
             return;
         }
 
@@ -43,7 +43,7 @@ public class ProfilerEntityUpdate extends ProfilerAbstract implements IProfilerB
         try {
             data.get(entity).addValue(clock.getDelta());
         } catch (Exception e) {
-            ModOpis.log.warn(String.format("Error while profiling entity %s\n", key));
+            OpisMod.LOGGER.warn(String.format("Error while profiling entity %s\n", key));
         }
     }
 }

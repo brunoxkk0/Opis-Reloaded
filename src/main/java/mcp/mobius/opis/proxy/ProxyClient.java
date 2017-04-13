@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Level;
 
 import net.minecraft.util.ResourceLocation;
 import mcp.mobius.opis.data.profilers.ProfilerSection;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.api.TabPanelRegistrar;
@@ -40,13 +40,21 @@ import mcp.mobius.opis.swing.panels.tracking.PanelAmountEntities;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.swing.panels.tracking.PanelDimensions;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class ProxyClient extends ProxyServer implements IMessageHandler {
+public class ProxyClient extends CommonProxy {
 
     public static TrueTypeFont fontMC8, fontMC12, fontMC16, fontMC18, fontMC24;
 
     @Override
-    public void init() {
+    public void preInit(FMLPreInitializationEvent event) {
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
         fontMC8 = Fonts.createFont(new ResourceLocation("opis", "fonts/LiberationMono-Bold.ttf"), 14, true);
 
         IMessageHandler panelSummary = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelSummary(), "Summary");
@@ -163,9 +171,9 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_THREADS, panelThreads);
 
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_CLEAR_SELECTION, ModOpis.proxy);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, ModOpis.proxy);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, ModOpis.proxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_CLEAR_SELECTION, OpisMod.proxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, OpisMod.proxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, OpisMod.proxy);
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, ChunkManager.INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE);
@@ -176,21 +184,28 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
     }
 
     @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        if (!Loader.isModLoaded("journeymap")) {
+            OpisMod.LOGGER.info("JourneyMap not loaded.");
+        }
+    }
+
+    @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         switch (msg) {
             case CLIENT_CLEAR_SELECTION: {
-                ModOpis.selectedBlock = null;
+                OpisMod.selectedBlock = null;
                 break;
             }
             case CLIENT_START_PROFILING: {
-                ModOpis.log.log(Level.INFO, "Started profiling");
+                OpisMod.LOGGER.log(Level.INFO, "Started profiling");
                 MetaManager.reset();
-                ModOpis.profilerRun = true;
+                OpisMod.profilerRun = true;
                 ProfilerSection.activateAll(Side.CLIENT);
                 break;
             }
             case CLIENT_SHOW_RENDER_TICK: {
-                ModOpis.log.log(Level.INFO, "=== RENDER TICK ===");
+                OpisMod.LOGGER.log(Level.INFO, "=== RENDER TICK ===");
                 //ArrayList<DataHandler> stats = TickHandlerManager.getCumulatedStatsServer();
                 //for (DataHandler stat : stats){
                 //	System.out.printf("%s \n", stat);
@@ -203,4 +218,5 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
 
         return true;
     }
+
 }

@@ -6,7 +6,7 @@ import mcp.mobius.opis.data.holders.basetypes.*;
 import mcp.mobius.opis.data.holders.newtypes.*;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -133,7 +133,7 @@ public enum TileEntityManager {
             });
         }
 
-        ModOpis.log.warn(String.format("Found %d potential orphans !", orphans.size()));
+        OpisMod.LOGGER.warn(String.format("Found %d potential orphans !", orphans.size()));
 
         return orphans;
     }

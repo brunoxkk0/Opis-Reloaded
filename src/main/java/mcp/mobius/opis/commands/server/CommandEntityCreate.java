@@ -10,14 +10,13 @@ import net.minecraft.util.text.TextComponentString;
 public class CommandEntityCreate extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opisenttrace";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        // TODO Auto-generated method stub
-        return null;
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opisenttrace ?<full>";
     }
 
     @Override
@@ -30,7 +29,7 @@ public class CommandEntityCreate extends CommandBase {
             OpisServerEventHandler.printEntityFull = false;
         }
 
-        icommandsender.addChatMessage(new TextComponentString(String.format("Entity trace is %s", OpisServerEventHandler.printEntityTrace)));
+        icommandsender.sendMessage(new TextComponentString(String.format("Entity trace is %s", OpisServerEventHandler.printEntityTrace)));
     }
 
     @Override
@@ -43,11 +42,10 @@ public class CommandEntityCreate extends CommandBase {
         if (sender instanceof DedicatedServer) {
             return true;
         }
-        //if ((sender instanceof EntityPlayerMP) && ((EntityPlayerMP)sender).playerNetServerHandler.netManager instanceof MemoryConnection) return true;
         if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) {
             return true;
         }
-        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getName());
+        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getId());
     }
 
 }

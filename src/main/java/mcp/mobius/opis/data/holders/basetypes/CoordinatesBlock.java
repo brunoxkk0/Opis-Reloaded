@@ -14,10 +14,10 @@ public final class CoordinatesBlock implements ISerializable {
     public final static CoordinatesBlock INVALID = new CoordinatesBlock(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     public CoordinatesBlock(Entity entity) {
-        this.dim = entity.worldObj.provider.getDimension();
-        this.x = MathHelper.floor_double(entity.posX);
-        this.y = MathHelper.floor_double(entity.posY);
-        this.z = MathHelper.floor_double(entity.posZ);
+        this.dim = entity.world.provider.getDimension();
+        this.x = MathHelper.floor(entity.posX);
+        this.y = MathHelper.floor(entity.posY);
+        this.z = MathHelper.floor(entity.posZ);
         this.chunkX = x >> 4;
         this.chunkZ = z >> 4;
     }
@@ -33,11 +33,11 @@ public final class CoordinatesBlock implements ISerializable {
 
     public CoordinatesBlock(int dim, double x, double y, double z) {
         this.dim = dim;
-        this.x = MathHelper.floor_double(x);
-        this.y = MathHelper.floor_double(y);
-        this.z = MathHelper.floor_double(z);
-        this.chunkX = MathHelper.floor_double(x) >> 4;
-        this.chunkZ = MathHelper.floor_double(z) >> 4;
+        this.x = MathHelper.floor(x);
+        this.y = MathHelper.floor(y);
+        this.z = MathHelper.floor(z);
+        this.chunkX = MathHelper.floor(x) >> 4;
+        this.chunkZ = MathHelper.floor(z) >> 4;
     }
 
     public CoordinatesBlock(CoordinatesChunk coord) {

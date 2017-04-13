@@ -1,13 +1,13 @@
 [
 {
-  "modid": "Opis",
-  "name": "Opis",
+  "modid": "opisreloaded",
+  "name": "OpisReloaded",
   "description": "Contextual server profiler",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authors": ["ProfMobius"],
+  "authors": ["ProfMobius", "ShadowKitten"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],

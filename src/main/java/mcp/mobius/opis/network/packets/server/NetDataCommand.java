@@ -12,6 +12,9 @@ import mcp.mobius.opis.network.enums.Message;
 
 public class NetDataCommand extends PacketBase {
 
+    public NetDataCommand() {
+    }
+
     public NetDataCommand(Message msg) {
         this.msg = msg;
     }

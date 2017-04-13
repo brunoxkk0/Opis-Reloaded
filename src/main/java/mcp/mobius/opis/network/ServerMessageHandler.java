@@ -11,13 +11,15 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import mcp.mobius.opis.data.profilers.ProfilerSection;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.basetypes.SerialString;
+import mcp.mobius.opis.data.holders.basetypes.TargetEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTick;
 import mcp.mobius.opis.data.holders.newtypes.DataChunkEntities;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
@@ -26,14 +28,16 @@ import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.EntityManager;
-import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.TileEntityManager;
+import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataCommand;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.swing.SelectedTab;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class ServerMessageHandler {
 
@@ -53,7 +57,7 @@ public class ServerMessageHandler {
         String name = player.getGameProfile().getName();
 
         if (null == maintype) {
-            ModOpis.log.log(Level.WARN, String.format("Unknown data request : %s ", maintype));
+            OpisMod.LOGGER.log(Level.WARN, String.format("Unknown data request : %s ", maintype));
         } else {
             switch (maintype) {
                 case OVERLAY_CHUNK_ENTITIES:
@@ -130,10 +134,17 @@ public class ServerMessageHandler {
                     PlayerTracker.INSTANCE.playerDimension.remove(player);
                     break;
                 case COMMAND_START:
-                    MetaManager.reset();
-                    ModOpis.profilerRun = true;
+                    OpisMod.profilerRun = false;
+                    OpisMod.selectedBlock = null;
+                    OpisServerTickHandler.INSTANCE.profilerRunningTicks = 0;
+
+                    ProfilerSection.resetAll(Side.SERVER);
+                    ProfilerSection.desactivateAll(Side.SERVER);
+                    //ProfilerSection.resetAll(Side.CLIENT);
+                    //ProfilerSection.desactivateAll(Side.CLIENT);	
+                    OpisMod.profilerRun = true;
                     ProfilerSection.activateAll(Side.SERVER);
-                    PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_START, new SerialInt(ModOpis.profilerMaxTicks)));
+                    PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_START, new SerialInt(OpisMod.profilerMaxTicks)));
                     break;
                 case COMMAND_KILLALL:
                     EntityManager.INSTANCE.killAll(((SerialString) param1).value);
@@ -166,6 +177,32 @@ public class ServerMessageHandler {
                         ChunkManager.INSTANCE.purgeChunks(dim);
                     }
                     break;
+
+                case COMMAND_TELEPORT_BLOCK:
+                    EntityManager.INSTANCE.teleportPlayer(player, (CoordinatesBlock) param1);
+                    PacketManager.validateAndSend(new NetDataValue(Message.CLIENT_HIGHLIGHT_BLOCK, param1), player);
+                    break;
+
+                case COMMAND_TELEPORT_TO_ENTITY:
+                    EntityManager.INSTANCE.teleportEntity(player, EntityManager.INSTANCE.getEntity(((TargetEntity) param1).entityID, ((TargetEntity) param1).dim), player);
+                    break;
+
+                case COMMAND_TELEPORT_PULL_ENTITY:
+                    EntityManager.INSTANCE.teleportEntity(EntityManager.INSTANCE.getEntity(((TargetEntity)param1).entityID, ((TargetEntity)param1).dim), player, player);
+                    break;
+                case COMMAND_TELEPORT_CHUNK:
+                    CoordinatesChunk chunkCoord = (CoordinatesChunk) param1;
+                    World world = DimensionManager.getWorld(chunkCoord.dim);
+                    if (world == null) {
+                        return;
+                    }
+
+                    BlockPos pos = new BlockPos(chunkCoord.x + 8, chunkCoord.y, chunkCoord.z + 8);
+                    BlockPos top = world.getTopSolidOrLiquidBlock(pos);
+                    CoordinatesBlock blockCoord = new CoordinatesBlock(chunkCoord.dim, top.getX(), top.getY(), top.getZ());
+
+                    EntityManager.INSTANCE.teleportPlayer(player, blockCoord);
+                    break;
                 case COMMAND_PURGE_CHUNKS_DIM:
                     ChunkManager.INSTANCE.purgeChunks(((SerialInt) param1).value);
                     break;
@@ -181,7 +218,7 @@ public class ServerMessageHandler {
                     PacketManager.splitAndSend(Message.LIST_ORPHAN_TILEENTS, TileEntityManager.INSTANCE.getOrphans(), player);
                     break;
                 default:
-                    ModOpis.log.log(Level.WARN, String.format("Unknown data request : %s ", maintype));
+                    OpisMod.LOGGER.log(Level.WARN, String.format("Unknown data request : %s ", maintype));
                     break;
             }
         }

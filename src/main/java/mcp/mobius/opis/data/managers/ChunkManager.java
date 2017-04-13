@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -120,9 +121,9 @@ public enum ChunkManager implements IMessageHandler {
         for (WorldServer world : DimensionManager.getWorlds()) {
             int loadedChunksForDim = world.getChunkProvider().getLoadedChunkCount();
             loadedChunks += loadedChunksForDim;
-            System.out.printf("[ %2d ]  %d chunks\n", world.provider.getDimension(), loadedChunksForDim);
+            OpisMod.LOGGER.debug("[ %2d ]  %d chunks\n", world.provider.getDimension(), loadedChunksForDim);
         }
-        System.out.printf("Total : %d chunks\n", loadedChunks);
+        OpisMod.LOGGER.debug("Total : %d chunks\n", loadedChunks);
         return loadedChunks;
     }
 
@@ -146,7 +147,7 @@ public enum ChunkManager implements IMessageHandler {
 
         while (loadedChunksDelta >= 100) {
             int loadedBefore = world.getChunkProvider().getLoadedChunkCount();
-            world.getChunkProvider().unloadQueuedChunks();
+            world.getChunkProvider().unloadAllChunks();
             loadedChunksDelta = loadedBefore - world.getChunkProvider().getLoadedChunkCount();
         }
     }

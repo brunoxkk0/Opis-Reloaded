@@ -170,7 +170,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
         tabGraphs.addTab("Ping", panelPing);
 
     }
-    
+
     public JLabel getLblTimingWorldTick() {
         return lblTimingWorldTick;
     }
@@ -315,7 +315,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
         datasetTick.removeAllSeries();
         datasetTick.addSeries(xydataTick);
 
-        Double verticalScale = 50.0 * (MathHelper.floor_double(xydataTick.getMaxY() / 50.0D) + 1);
+        Double verticalScale = 50.0 * (MathHelper.floor(xydataTick.getMaxY() / 50.0D) + 1);
         ((NumberAxis) xyPlotTick.getRangeAxis()).setRange(0.0, verticalScale);
         ((NumberAxis) xyPlotTick.getDomainAxis()).setRange(0.0, 100.0);
     }
@@ -337,7 +337,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
         datasetPing.removeAllSeries();
         datasetPing.addSeries(xydataPing);
 
-        Double verticalScale = 500.0 * (MathHelper.floor_double(xydataPing.getMaxY() / 500.0D) + 1);
+        Double verticalScale = 500.0 * (MathHelper.floor(xydataPing.getMaxY() / 500.0D) + 1);
         ((NumberAxis) xyPlotPing.getRangeAxis()).setRange(0.0, verticalScale);
         ((NumberAxis) xyPlotPing.getDomainAxis()).setRange(0.0, 100.0);
     }
@@ -381,8 +381,8 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 break;
             }
             case VALUE_TIMING_NETWORK: {
-                this.timingNetworkTotal = ((DataNetworkTick)rawdata.value).update.asMillisecond();
-                this.getLblTimingNetwork().setText(this.timingNetworkTotal.toString());			
+                //this.timingNetworkTotal = ((DataNetworkTick) rawdata.value).update.asMillisecond();
+                //this.getLblTimingNetwork().setText(this.timingNetworkTotal.toString());
                 break;
             }
             case VALUE_TIMING_TILEENTS: {
@@ -397,11 +397,11 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString()));
                 break;
             }
-            case VALUE_TIMING_HANDLERS:{
-            	this.timingHandlersTotal = ((DataTiming)rawdata.value).asMillisecond();
-            	this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString() ));
-            	break;
-            }					
+            case VALUE_TIMING_HANDLERS: {
+                this.timingHandlersTotal = ((DataTiming) rawdata.value).asMillisecond();
+                this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString()));
+                break;
+            }
             case VALUE_TIMING_WORLDTICK: {
                 this.timingWorldTickTotal = ((DataBlockTick) rawdata.value).total.asMillisecond();
                 this.getLblTimingWorldTick().setText(this.timingWorldTickTotal.toString());

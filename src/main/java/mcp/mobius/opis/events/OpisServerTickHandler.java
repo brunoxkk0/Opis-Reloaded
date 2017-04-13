@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
@@ -54,10 +54,10 @@ public enum OpisServerTickHandler {
         StringCache.INSTANCE.syncNewCache();
 
         // One second timer
-        if (timer1000.isDone()) {
+        if (timer1000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
 
-            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_AMOUNT_UPLOAD, new SerialLong(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).dataAmount)));
-            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_AMOUNT_DOWNLOAD, new SerialLong(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).dataAmount)));
+            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_AMOUNT_DOWNLOAD, new SerialLong(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).dataAmount)));
+            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_AMOUNT_UPLOAD, new SerialLong(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).dataAmount)));
             PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_CHUNK_FORCED, new SerialInt(ChunkManager.INSTANCE.getForcedChunkAmount())));
             PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_CHUNK_LOADED, new SerialInt(ChunkManager.INSTANCE.getLoadedChunkAmount())));
             PacketManager.sendPacketToAllSwing(new NetDataValue(Message.VALUE_TIMING_TICK, new DataTiming(((ProfilerTick) ProfilerSection.TICK.getProfiler()).data.getGeometricMean())));
@@ -85,22 +85,29 @@ public enum OpisServerTickHandler {
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_DIMENSION_DATA, dimData));
 
             // Profiler update (if running)
-            if (ModOpis.profilerRun) {
-                PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUNNING, new SerialInt(ModOpis.profilerMaxTicks)));
+            if (OpisMod.profilerRun) {
+                PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUNNING, new SerialInt(OpisMod.profilerMaxTicks)));
                 PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUN_UPDATE, new SerialInt(profilerRunningTicks)));
             }
-
             ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).dataAmount = 0L;
             ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).dataAmount = 0L;
         }
 
         // Two second timer
-        if (timer2000.isDone()) {
+        if (timer2000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
+            ArrayList<DataThread> threads = new ArrayList<>();
+            Thread.getAllStackTraces().keySet().forEach((t) -> {
+                threads.add(new DataThread().fill(t));
+            });
+            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_THREADS, threads));
+
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PLAYERS, EntityManager.INSTANCE.getAllPlayers()));
         }
 
         // Five second timer
-        if (timer5000.isDone()) {
+        if (timer5000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
+            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_AMOUNT_ENTITIES, EntityManager.INSTANCE.getCumulativeEntities(false)));
+            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()));
 
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_OUTBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values())));
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_INBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values())));
@@ -120,14 +127,14 @@ public enum OpisServerTickHandler {
 
         profilerUpdateTickCounter++;
 
-        if (profilerRunningTicks < ModOpis.profilerMaxTicks && ModOpis.profilerRun) {
+        if (profilerRunningTicks < OpisMod.profilerMaxTicks && OpisMod.profilerRun) {
             profilerRunningTicks++;
-        } else if (profilerRunningTicks >= ModOpis.profilerMaxTicks && ModOpis.profilerRun) {
+        } else if (profilerRunningTicks >= OpisMod.profilerMaxTicks && OpisMod.profilerRun) {
             profilerRunningTicks = 0;
-            ModOpis.profilerRun = false;
+            OpisMod.profilerRun = false;
             ProfilerSection.desactivateAll(Side.SERVER);
 
-            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_STOP, new SerialInt(ModOpis.profilerMaxTicks)));
+            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_STOP, new SerialInt(OpisMod.profilerMaxTicks)));
 
             PlayerTracker.INSTANCE.playersSwing.forEach((player) -> {
                 PacketManager.sendFullUpdate(player);

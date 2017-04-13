@@ -79,9 +79,9 @@ public class PanelAmountTileEnts extends JPanelMsgHandler implements ITabPanel {
 
                 break;
             }
-            default:
+            default: {
                 return false;
-
+            }
         }
         return true;
     }

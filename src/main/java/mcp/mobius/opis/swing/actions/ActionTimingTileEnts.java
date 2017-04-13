@@ -2,7 +2,7 @@ package mcp.mobius.opis.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
@@ -13,7 +13,11 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
+import mcp.mobius.opis.helpers.ModIdentification;
+import mcp.mobius.opis.map.JourneyMapPlugin;
+import mcp.mobius.opis.map.factory.MarkerOverlayFactory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
 
 public class ActionTimingTileEnts implements ActionListener {
 
@@ -30,17 +34,23 @@ public class ActionTimingTileEnts implements ActionListener {
 
         if (e.getSource() == panel.getBtnCenter()) {
             CoordinatesBlock coord = data.pos;
+            if (OpisMod.mappingEnabled) {
+                BlockPos pos = new BlockPos(coord.x, coord.y, coord.z);
+                String name = ModIdentification.getStackName(data.id, data.meta);
+                String modID = ModIdentification.getModStackName(data.id, data.meta);
+                MarkerOverlayFactory.create(JourneyMapPlugin.getAPI(), pos, name, modID + " X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
+            }
         }
 
         if (e.getSource() == panel.getBtnTeleport()) {
             CoordinatesBlock coord = data.pos;
-            ModOpis.selectedBlock = coord;
+            OpisMod.selectedBlock = coord;
             PacketManager.sendToServer(new PacketReqData(Message.COMMAND_TELEPORT_BLOCK, coord));
             Minecraft.getMinecraft().setIngameFocus();
         }
 
         if (e.getSource() == panel.getBtnReset()) {
-            ModOpis.selectedBlock = null;
+            OpisMod.selectedBlock = null;
         }
     }
 

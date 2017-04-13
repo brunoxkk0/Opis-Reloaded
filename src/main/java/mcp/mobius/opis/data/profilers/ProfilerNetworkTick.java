@@ -1,5 +1,6 @@
 package mcp.mobius.opis.data.profilers;
 
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -21,8 +22,12 @@ public class ProfilerNetworkTick extends ProfilerAbstract {
 
     @Override
     public void stop() {
-        clock.stop();
-        data.addValue(clock.getDelta());
+        try {
+            clock.stop();
+            data.addValue(clock.getDelta());
+        } catch (Exception e) {
+            OpisMod.LOGGER.warn("Error while profiling network tick.");
+        }
     }
 
 }

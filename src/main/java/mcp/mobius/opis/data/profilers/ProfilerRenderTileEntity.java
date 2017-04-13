@@ -4,7 +4,7 @@ import java.util.WeakHashMap;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 import net.minecraft.tileentity.TileEntity;
 
@@ -32,9 +32,11 @@ public class ProfilerRenderTileEntity extends ProfilerAbstract {
     public void stop(Object key) {
         clock.stop();
         try {
-            data.get(key).addValue(clock.getDelta());
+            if (key instanceof TileEntity) {
+                data.get(((TileEntity)key)).addValue(clock.getDelta());
+            }
         } catch (Exception e) {
-            ModOpis.log.warn(String.format("Error while profiling entity %s\n", key));
+            OpisMod.LOGGER.warn(String.format("Error while profiling render tile entity %s\n", key));
         }
     }
 }

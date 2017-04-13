@@ -14,22 +14,21 @@ import net.minecraft.util.text.TextComponentString;
 public class CommandReset extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "opisreset";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-        return "";
+    public String getUsage(ICommandSender icommandsender) {
+        return "/opisreset";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender icommandsender, String[] args) throws CommandException {
         MetaManager.reset();
 
-        icommandsender.addChatMessage(new TextComponentString(String.format("\u00A7oInternal data reseted.")));
+        icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oInternal data reseted.")));
 
-        //PacketDispatcher.sendPacketToAllPlayers(NetDataCommand.create(Message.CLIENT_CLEAR_SELECTION));
         if (icommandsender instanceof EntityPlayerMP) {
             PacketManager.validateAndSend(new NetDataCommand(Message.CLIENT_CLEAR_SELECTION), (EntityPlayerMP) icommandsender);
         }
@@ -45,11 +44,10 @@ public class CommandReset extends CommandBase {
         if (sender instanceof DedicatedServer) {
             return true;
         }
-        //if ((sender instanceof EntityPlayerMP) && ((EntityPlayerMP)sender).playerNetServerHandler.netManager instanceof MemoryConnection) return true;
         if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) {
             return true;
         }
-        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getName());
+        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getId());
     }
 
 }

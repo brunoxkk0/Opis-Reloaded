@@ -4,14 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import mcp.mobius.opis.data.profilers.ProfilerSection;
-import mcp.mobius.opis.ModOpis;
+import mcp.mobius.opis.OpisMod;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class ActionRunOpisClient implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ModOpis.profilerRunClient = true;
+        OpisMod.profilerRunClient = true;
         ProfilerSection.resetAll(Side.CLIENT);
         ProfilerSection.activateAll(Side.CLIENT);
     }
