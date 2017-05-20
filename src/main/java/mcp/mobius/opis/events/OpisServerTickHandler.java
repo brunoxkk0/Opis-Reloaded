@@ -107,7 +107,7 @@ public enum OpisServerTickHandler {
         // Five second timer
         if (timer5000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_AMOUNT_ENTITIES, EntityManager.INSTANCE.getCumulativeEntities(false)));
-            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()));
+            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumuativeAmountTileEntities()));
 
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_OUTBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values())));
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_INBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values())));

@@ -266,16 +266,17 @@ public enum EntityManager {
                 continue;
             }
 
-            ArrayList copyList = new ArrayList(world.loadedEntityList);
+            ArrayList<Entity> copyList = new ArrayList(world.loadedEntityList);
 
-            for (Object o : copyList) {
-                Entity ent = (Entity) o;
-                String nameFiltered = this.getEntityName(ent, true).toLowerCase();
-                String nameUnfiltered = this.getEntityName(ent, false).toLowerCase();
+            for (Entity entity : copyList) {
+                if (entity != null) {
+                    String nameFiltered = getEntityName(entity, true).toLowerCase();
+                    String nameUnfiltered = getEntityName(entity, false).toLowerCase();
 
-                if (nameFiltered.equals(entName.toLowerCase()) || nameUnfiltered.equals(entName.toLowerCase())) {
-                    ent.setDead();
-                    nkilled += 1;
+                    if (nameFiltered.equals(entName.toLowerCase()) || nameUnfiltered.equals(entName.toLowerCase())) {
+                        entity.setDead();
+                        nkilled += 1;
+                    }
                 }
             }
         }
@@ -313,14 +314,12 @@ public enum EntityManager {
 
         int killedEnts = 0;
 
-        ArrayList copyList = new ArrayList(world.loadedEntityList);
+        ArrayList<Entity> copyList = new ArrayList(world.loadedEntityList);
 
-        for (Entity entity : (ArrayList<Entity>) copyList) {
-            if (clazz.isInstance(entity)) {
-                entity.setDead();
-                killedEnts += 1;
-            }
-        }
+        killedEnts = copyList.stream().filter((entity) -> (clazz.isInstance(entity))).map((entity) -> {
+            entity.setDead();
+            return entity;
+        }).map((_item) -> 1).reduce(killedEnts, Integer::sum);
         return killedEnts;
     }
 

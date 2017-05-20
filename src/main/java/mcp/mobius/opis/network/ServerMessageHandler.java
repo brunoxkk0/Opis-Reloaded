@@ -122,7 +122,7 @@ public class ServerMessageHandler {
                     PacketManager.validateAndSend(new NetDataList(Message.LIST_AMOUNT_ENTITIES, ents), player);
                     break;
                 case LIST_AMOUNT_TILEENTS:
-                    PacketManager.validateAndSend(new NetDataList(Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()), player);
+                    PacketManager.validateAndSend(new NetDataList(Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumuativeAmountTileEntities()), player);
                     break;
                 case COMMAND_FILTERING_TRUE:
                     PlayerTracker.INSTANCE.filteredAmount.put(name, true);

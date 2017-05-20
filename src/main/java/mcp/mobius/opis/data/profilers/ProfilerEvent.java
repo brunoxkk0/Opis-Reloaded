@@ -7,6 +7,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.collect.HashBasedTable;
 import mcp.mobius.opis.OpisMod;
+import org.apache.commons.math3.exception.MathIllegalArgumentException;
 
 public class ProfilerEvent extends ProfilerAbstract {
 
@@ -55,7 +56,7 @@ public class ProfilerEvent extends ProfilerAbstract {
                     data.get(event.getClass(), name).addValue(clock.getDelta());
                 }
             }
-        } catch (Exception e) {
+        } catch (MathIllegalArgumentException e) {
             OpisMod.LOGGER.warn(String.format("Error while profiling event %s\n", event));
         }
     }

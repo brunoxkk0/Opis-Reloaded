@@ -27,7 +27,7 @@ public class OpisMod {
 
     public static final String NAME = "OpisReloaded";
     public static final String MODID = "opisreloaded";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1.0";
 
     @Mod.Instance(OpisMod.MODID)
     public static OpisMod instance;

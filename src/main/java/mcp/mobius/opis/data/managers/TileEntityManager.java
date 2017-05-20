@@ -111,9 +111,8 @@ public enum TileEntityManager {
                 //This entitie has already been seen;
                 int hash = System.identityHashCode(tileEntity);
                 if (!(registeredEntities.contains(hash))) {
-                    IBlockState block = world.getBlockState(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()));
-                    if (block.getBlock() == Blocks.AIR || !block.getBlock().hasTileEntity() || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())) == null || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getClass() != tileEntity.getClass()) {
-
+                    IBlockState block = world.getBlockState(tileEntity.getPos());
+                    if (block != null || block.getBlock() == Blocks.AIR || !block.getBlock().hasTileEntity() || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())) == null || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getClass() != tileEntity.getClass()) {
                         orphans.add(new DataTileEntity().fill(tileEntity, "Orphan"));
                         registeredEntities.add(hash);
                     }
@@ -138,18 +137,17 @@ public enum TileEntityManager {
         return orphans;
     }
 
-    public ArrayList<DataBlockTileEntityPerClass> getCumulativeAmountTileEntities() {
+    public ArrayList<DataBlockTileEntityPerClass> getCumuativeAmountTileEntities() {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            world.loadedTileEntityList.stream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
-                int id = Block.getIdFromBlock(world.getBlockState(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getBlock());
-                int meta = world.getBlockState(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getBlock().getMetaFromState(world.getBlockState(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())));
-
+            world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
+                Integer id = Block.getIdFromBlock(state.getBlock());
+                Integer meta = state.getBlock().getMetaFromState(state);
+                
                 if (!data.contains(id, meta)) {
                     data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
                 }
-
                 data.get(id, meta).add();
             });
         }
@@ -162,14 +160,17 @@ public enum TileEntityManager {
 
         ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet().forEach((coord) -> {
             World world = DimensionManager.getWorld(coord.dim);
-            int id = Block.getIdFromBlock(world.getBlockState(new BlockPos(coord.x, coord.y, coord.z)).getBlock());
-            int meta = world.getBlockState(new BlockPos(coord.x, coord.y, coord.z)).getBlock().getMetaFromState(world.getBlockState(new BlockPos(coord.x, coord.y, coord.z)));
+            IBlockState state = world.getBlockState(new BlockPos(coord.x, coord.y, coord.z));
+            if (state != null) {
+                int id = Block.getIdFromBlock(state.getBlock());
+                int meta = state.getBlock().getMetaFromState(state);
 
-            if (!data.contains(id, meta)) {
-                data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                if (!data.contains(id, meta)) {
+                    data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                }
+
+                data.get(id, meta).add(((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coord).getGeometricMean());
             }
-
-            data.get(id, meta).add(((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coord).getGeometricMean());
         });
 
         return new ArrayList<>(data.values());

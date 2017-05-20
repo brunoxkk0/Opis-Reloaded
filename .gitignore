@@ -1,0 +1,31 @@
+# Eclipse
+.classpath/
+.project/
+.settings/
+
+# Netbeans
+.nb-gradle/
+.nb-gradle.properties
+
+.hgtags
+.hgignore
+.hg_archival.txt
+
+# Intellij
+
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Maven
+build.xml
+target/
+
+# Gradle
+.gradle/
+*/build/
+build/
+
+# Vim
+*.swp
