@@ -106,30 +106,32 @@ public enum TileEntityManager {
         HashSet<Integer> registeredEntities = new HashSet<>();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            world.loadedTileEntityList.stream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
-                CoordinatesBlock coord = new CoordinatesBlock(world.provider.getDimension(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
-                //This entitie has already been seen;
-                int hash = System.identityHashCode(tileEntity);
-                if (!(registeredEntities.contains(hash))) {
-                    IBlockState block = world.getBlockState(tileEntity.getPos());
-                    if (block != null || block.getBlock() == Blocks.AIR || !block.getBlock().hasTileEntity() || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())) == null || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getClass() != tileEntity.getClass()) {
-                        orphans.add(new DataTileEntity().fill(tileEntity, "Orphan"));
-                        registeredEntities.add(hash);
-                    }
-                    if (coordHashset.containsKey(coord)) {
-                        if (!registeredEntities.contains(hash)) {
-                            orphans.add(new DataTileEntity().fill(tileEntity, "Duplicate"));
+            synchronized (world.loadedTileEntityList){
+                world.loadedTileEntityList.stream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
+                    CoordinatesBlock coord = new CoordinatesBlock(world.provider.getDimension(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+                    //This entitie has already been seen;
+                    int hash = System.identityHashCode(tileEntity);
+                    if (!(registeredEntities.contains(hash))) {
+                        IBlockState block = world.getBlockState(tileEntity.getPos());
+                        if (block != null || block.getBlock() == Blocks.AIR || !block.getBlock().hasTileEntity() || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())) == null || world.getTileEntity(new BlockPos(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ())).getClass() != tileEntity.getClass()) {
+                            orphans.add(new DataTileEntity().fill(tileEntity, "Orphan"));
+                            registeredEntities.add(hash);
                         }
+                        if (coordHashset.containsKey(coord)) {
+                            if (!registeredEntities.contains(hash)) {
+                                orphans.add(new DataTileEntity().fill(tileEntity, "Duplicate"));
+                            }
 
-                        if (!registeredEntities.contains(coordHashset.get(coord).hashCode)) {
-                            orphans.add(coordHashset.get(coord));
+                            if (!registeredEntities.contains(coordHashset.get(coord).hashCode)) {
+                                orphans.add(coordHashset.get(coord));
+                            }
+                        }
+                        if (!coordHashset.containsKey(coord)) {
+                            coordHashset.put(coord, new DataTileEntity().fill(tileEntity, "Duplicate"));
                         }
                     }
-                    if (!coordHashset.containsKey(coord)) {
-                        coordHashset.put(coord, new DataTileEntity().fill(tileEntity, "Duplicate"));
-                    }
-                }
-            });
+                });
+            }
         }
 
         OpisMod.LOGGER.warn(String.format("Found %d potential orphans !", orphans.size()));
@@ -141,15 +143,17 @@ public enum TileEntityManager {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
-                Integer id = Block.getIdFromBlock(state.getBlock());
-                Integer meta = state.getBlock().getMetaFromState(state);
-                
-                if (!data.contains(id, meta)) {
-                    data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
-                }
-                data.get(id, meta).add();
-            });
+            synchronized (world.loadedTileEntityList) {
+                world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
+                    Integer id = Block.getIdFromBlock(state.getBlock());
+                    Integer meta = state.getBlock().getMetaFromState(state);
+
+                    if (!data.contains(id, meta)) {
+                        data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                    }
+                    data.get(id, meta).add();
+                });
+            }
         }
 
         return new ArrayList<>(data.values());
