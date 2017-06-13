@@ -106,8 +106,7 @@ public enum TileEntityManager {
         HashSet<Integer> registeredEntities = new HashSet<>();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            synchronized (world.loadedTileEntityList){
-                world.loadedTileEntityList.stream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
+                world.loadedTileEntityList.parallelStream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
                     CoordinatesBlock coord = new CoordinatesBlock(world.provider.getDimension(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
                     //This entitie has already been seen;
                     int hash = System.identityHashCode(tileEntity);
@@ -131,7 +130,6 @@ public enum TileEntityManager {
                         }
                     }
                 });
-            }
         }
 
         OpisMod.LOGGER.warn(String.format("Found %d potential orphans !", orphans.size()));
@@ -143,17 +141,15 @@ public enum TileEntityManager {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            synchronized (world.loadedTileEntityList) {
-                world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
-                    Integer id = Block.getIdFromBlock(state.getBlock());
-                    Integer meta = state.getBlock().getMetaFromState(state);
+            world.loadedTileEntityList.parallelStream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
+                Integer id = Block.getIdFromBlock(state.getBlock());
+                Integer meta = state.getBlock().getMetaFromState(state);
 
-                    if (!data.contains(id, meta)) {
-                        data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
-                    }
-                    data.get(id, meta).add();
-                });
-            }
+                if (!data.contains(id, meta)) {
+                    data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                }
+                data.get(id, meta).add();
+            });
         }
 
         return new ArrayList<>(data.values());
