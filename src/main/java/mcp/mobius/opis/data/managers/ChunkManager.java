@@ -57,7 +57,7 @@ public enum ChunkManager implements IMessageHandler {
                 chunkStatus.add(new CoordinatesChunk(dimension, coord, (byte) 1));
             });
             world.getChunkProvider().getLoadedChunks().forEach((chunk) -> {
-                chunkStatus.add(new CoordinatesChunk(dimension, chunk.getChunkCoordIntPair(), (byte)0));
+                chunkStatus.add(new CoordinatesChunk(dimension, chunk.getPos(), (byte)0));
             });
         }
 

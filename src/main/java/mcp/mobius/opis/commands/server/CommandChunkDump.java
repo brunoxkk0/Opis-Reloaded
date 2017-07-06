@@ -33,10 +33,10 @@ public class CommandChunkDump extends CommandBase {
             Set<ChunkPos> persistantChunks = DimensionManager.getWorld(worldID).getPersistentChunks().keySet();
             Collection<Chunk> chunks = DimensionManager.getWorld(worldID).getChunkProvider().getLoadedChunks();
             chunks.stream().map((chunk) -> {
-                OpisMod.LOGGER.log(Level.INFO, String.format("Dim : %s, %s, Forced : %s", worldID, chunk, persistantChunks.contains(chunk.getChunkCoordIntPair())));
+                OpisMod.LOGGER.log(Level.INFO, String.format("Dim : %s, %s, Forced : %s", worldID, chunk, persistantChunks.contains(chunk.getPos())));
                 return chunk;
             }).forEachOrdered((chunk) -> {
-                chunkStatus.put(chunk.getChunkCoordIntPair(), persistantChunks.contains(chunk.getChunkCoordIntPair()));
+                chunkStatus.put(chunk.getPos(), persistantChunks.contains(chunk.getPos()));
             });
         }
 

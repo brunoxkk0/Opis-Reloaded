@@ -14,6 +14,7 @@ import mcp.mobius.opis.proxy.CommonProxy;
 import mcp.mobius.opis.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.*;
@@ -97,11 +98,17 @@ public class OpisMod {
     public void init(FMLInitializationEvent event) {
         if (lagGenID != -1) {
             Block blockDemo = new BlockLag(Material.WOOD);
-            GameRegistry.registerBlock(blockDemo, "opis.laggen");
+            GameRegistry.register(blockDemo);
+            ItemBlock itemDemo = new ItemBlock(blockDemo);
+            itemDemo.setRegistryName("opis.laggen");
+            GameRegistry.register(itemDemo);
             GameRegistry.registerTileEntity(TileLag.class, "opis.laggen");
 
             Block blockDebug = new BlockDebug(Material.WOOD);
-            GameRegistry.registerBlock(blockDebug, "opis.debug");
+            GameRegistry.register(blockDebug);
+            ItemBlock itemDebug = new ItemBlock(blockDebug);
+            itemDebug.setRegistryName("opis.debug");
+            GameRegistry.register(itemDebug);
             GameRegistry.registerTileEntity(TileDebug.class, "opis.debug");
         }
 

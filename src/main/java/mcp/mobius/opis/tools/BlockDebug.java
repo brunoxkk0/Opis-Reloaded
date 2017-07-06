@@ -9,7 +9,7 @@ public class BlockDebug extends BlockContainer {
 
     public BlockDebug(Material par2Material) {
         super(par2Material);
-        //this.setUnlocalizedName("Debug Companion Cube");
+        this.setUnlocalizedName("Debug Companion Cube");
     }
 
     @Override

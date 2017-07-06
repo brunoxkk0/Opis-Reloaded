@@ -9,7 +9,7 @@ public class BlockLag extends BlockContainer {
 
     public BlockLag(Material par2Material) {
         super(par2Material);
-        //this.setUnlocalizedName("Lag Generator");
+        this.setUnlocalizedName("Lag Generator");
     }
 
     @Override
