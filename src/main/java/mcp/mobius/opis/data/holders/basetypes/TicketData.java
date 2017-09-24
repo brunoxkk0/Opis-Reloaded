@@ -21,10 +21,10 @@ public final class TicketData implements ISerializable {
 
         for (Object obj : requestedChunks) {
             ChunkPos chunk = (ChunkPos) obj;
-            maxChunkX = Math.max(maxChunkX, chunk.chunkXPos);
-            minChunkX = Math.min(minChunkX, chunk.chunkXPos);
-            maxChunkZ = Math.max(maxChunkZ, chunk.chunkZPos);
-            minChunkZ = Math.min(minChunkZ, chunk.chunkZPos);
+            maxChunkX = Math.max(maxChunkX, chunk.x);
+            minChunkX = Math.min(minChunkX, chunk.x);
+            maxChunkZ = Math.max(maxChunkZ, chunk.z);
+            minChunkZ = Math.min(minChunkZ, chunk.z);
         }
 
         this.coord = new CoordinatesChunk(ticket.world.provider.getDimension(), (minChunkX + maxChunkX) / 2, (minChunkZ + maxChunkZ) / 2);

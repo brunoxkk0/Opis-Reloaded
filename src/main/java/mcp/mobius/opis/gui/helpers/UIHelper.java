@@ -15,7 +15,7 @@ public class UIHelper {
         float f = 0.00390625F;
 
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buf = tess.getBuffer();
+        BufferBuilder buf = tess.getBuffer();
         buf.begin(7, DefaultVertexFormats.POSITION_TEX);
         buf.pos((double) (posX + 0), (double) (posY + sizeY), (double) zLevel).tex(texU * f, (texV + texSizeV) * f).endVertex();
         buf.pos((double) (posX + sizeX), (double) (posY + sizeY), (double) zLevel).tex((texU + texSizeU) * f, (texV + texSizeV) * f).endVertex();
@@ -39,7 +39,7 @@ public class UIHelper {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buf = tess.getBuffer();
+        BufferBuilder buf = tess.getBuffer();
         buf.begin(7, DefaultVertexFormats.POSITION_TEX);
         //		tessellator.setColorRGBA_F(red1, green1, blue1, alpha1);
         buf.pos((double) maxx, (double) miny, (double) zlevel).endVertex();
@@ -57,7 +57,7 @@ public class UIHelper {
     public void drawLine(int x, int y, int x2, int y2, int width, float... rgba) {
 
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buf = tess.getBuffer();
+        BufferBuilder buf = tess.getBuffer();
         GL11.glPushMatrix();
         //GL11.glLineWidth(3);
         GL11.glLineWidth(width);

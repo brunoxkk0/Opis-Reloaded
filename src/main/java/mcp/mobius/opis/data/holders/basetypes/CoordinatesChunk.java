@@ -51,8 +51,8 @@ public final class CoordinatesChunk implements ISerializable {
 
     public CoordinatesChunk(int dim, ChunkPos coord) {
         this.dim = dim;
-        this.chunkX = coord.chunkXPos;
-        this.chunkZ = coord.chunkZPos;
+        this.chunkX = coord.x;
+        this.chunkZ = coord.z;
 
         this.x = chunkX << 4;
         this.y = 0;
@@ -63,8 +63,8 @@ public final class CoordinatesChunk implements ISerializable {
 
     public CoordinatesChunk(int dim, ChunkPos coord, byte metadata) {
         this.dim = dim;
-        this.chunkX = coord.chunkXPos;
-        this.chunkZ = coord.chunkZPos;
+        this.chunkX = coord.x;
+        this.chunkZ = coord.z;
 
         this.x = chunkX << 4;
         this.y = 0;

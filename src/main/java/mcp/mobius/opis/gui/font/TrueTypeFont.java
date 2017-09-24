@@ -242,7 +242,7 @@ public class TrueTypeFont {
         float RenderWidth = (SrcWidth / textureWidth);
         float RenderHeight = (SrcHeight / textureHeight);
         Tessellator t = Tessellator.getInstance();
-        VertexBuffer buf = t.getBuffer();
+        BufferBuilder buf = t.getBuffer();
         //t.setColorRGBA_F(0f, 0f, 0f, 1f);
 
         buf.pos(drawX, drawY, 0).tex(TextureSrcX, TextureSrcY).endVertex();
@@ -362,7 +362,7 @@ public class TrueTypeFont {
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, fontTextureID);
         Tessellator t = Tessellator.getInstance();
-        VertexBuffer buf = t.getBuffer();
+        BufferBuilder buf = t.getBuffer();
         buf.begin(7, DefaultVertexFormats.POSITION);
         //	GL11.glBegin(GL11.GL_QUADS);
         if (rgba.length == 4) //TODO fix

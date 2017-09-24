@@ -133,7 +133,7 @@ public class PacketManager {
         }
 
         private void actionServer(ChannelHandlerContext ctx, PacketBase packet) {
-            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
+            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
             packet.actionServer(player.world, player);
         }
 
@@ -181,7 +181,7 @@ public class PacketManager {
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, PacketBase packet) throws Exception {
-            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
+            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
             packet.actionServer(player.world, player);
         }
     }

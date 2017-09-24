@@ -43,7 +43,7 @@ public class OpisMod {
     public static boolean profilerRunClient = false;
     public static int profilerMaxTicks = 250;
     public static boolean microseconds = true;
-    private static int lagGenID = -1;
+    public static boolean debugBlocks = false;
     public static CoordinatesBlock selectedBlock = null;
 
     public static boolean mappingEnabled = false;
@@ -59,9 +59,9 @@ public class OpisMod {
         config = new Configuration(event.getSuggestedConfigurationFile());
 
         profilerDelay = config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
-        lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1).getInt();
         profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
         microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
+        debugBlocks = config.get(Configuration.CATEGORY_GENERAL, "debug.blocks", false).getBoolean(false);
 
         String[] users = config.get("ACCESS_RIGHTS", "privileged", new String[]{}, commentPrivileged).getStringList();
         AccessLevel minTables = AccessLevel.PRIVILEGED;
@@ -96,22 +96,6 @@ public class OpisMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        if (lagGenID != -1) {
-            Block blockDemo = new BlockLag(Material.WOOD);
-            GameRegistry.register(blockDemo);
-            ItemBlock itemDemo = new ItemBlock(blockDemo);
-            itemDemo.setRegistryName("opis.laggen");
-            GameRegistry.register(itemDemo);
-            GameRegistry.registerTileEntity(TileLag.class, "opis.laggen");
-
-            Block blockDebug = new BlockDebug(Material.WOOD);
-            GameRegistry.register(blockDebug);
-            ItemBlock itemDebug = new ItemBlock(blockDebug);
-            itemDebug.setRegistryName("opis.debug");
-            GameRegistry.register(itemDebug);
-            GameRegistry.registerTileEntity(TileDebug.class, "opis.debug");
-        }
-
         ProfilerSection.RENDER_TILEENTITY.setProfiler(new ProfilerRenderTileEntity());
         ProfilerSection.RENDER_ENTITY.setProfiler(new ProfilerRenderEntity());
         ProfilerSection.RENDER_BLOCK.setProfiler(new ProfilerRenderBlock());

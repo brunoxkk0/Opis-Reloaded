@@ -225,7 +225,7 @@ public enum EntityManager {
             return "Dropped Item";
         } else if (ent instanceof EntityItem && !filtered) {
             try {
-                return "[Stack] " + ((EntityItem) ent).getEntityItem().getDisplayName();
+                return "[Stack] " + ((EntityItem) ent).getItem().getDisplayName();
             } catch (Exception e) {
                 return "<Unknown dropped item>";
             }

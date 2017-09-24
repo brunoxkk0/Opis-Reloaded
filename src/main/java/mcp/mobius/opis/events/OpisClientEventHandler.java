@@ -54,7 +54,7 @@ public class OpisClientEventHandler {
             GL11.glDepthMask(false);
 
             Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer buf = tessellator.getBuffer();
+            BufferBuilder buf = tessellator.getBuffer();
             buf.begin(7, DefaultVertexFormats.POSITION);
             //            tessellator.setColorRGBA(255, 0, 0, 150);
 

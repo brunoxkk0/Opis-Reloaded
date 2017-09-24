@@ -11,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = TileEntitySpecialRenderer.class, priority = 1001)
 public abstract class MixinTileEntitySpecialRenderer extends Object {
 
-    @Inject(method = "renderTileEntityAt", at = @At("HEAD"))
-    public void renderTileEntityAtStart(TileEntity tileentity, double d, double d1, double d2, float f, int i, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("HEAD"))
+    public void renderTileEntityAtStart(TileEntity tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha, CallbackInfo ci) {
         ProfilerSection.RENDER_TILEENTITY.start(tileentity);
     }
 
-    @Inject(method = "renderTileEntityAt", at = @At("RETURN"))
-    public void renderTileEntityAtEnd(TileEntity tileentity, double d, double d1, double d2, float f, int i, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("RETURN"))
+    public void renderTileEntityAtEnd(TileEntity tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha, CallbackInfo ci) {
         ProfilerSection.RENDER_TILEENTITY.stop(tileentity);
     }
 }

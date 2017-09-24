@@ -7,9 +7,10 @@ import net.minecraft.world.World;
 
 public class BlockDebug extends BlockContainer {
 
-    public BlockDebug(Material par2Material) {
-        super(par2Material);
-        this.setUnlocalizedName("Debug Companion Cube");
+    public BlockDebug() {
+        super(Material.WOOD);
+        setUnlocalizedName("Debug Companion Cube");
+        setRegistryName("debug");
     }
 
     @Override

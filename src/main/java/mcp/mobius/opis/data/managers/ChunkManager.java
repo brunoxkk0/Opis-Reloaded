@@ -143,11 +143,11 @@ public enum ChunkManager implements IMessageHandler {
 
         int loadedChunksDelta = 100;
 
-        world.getChunkProvider().unloadAllChunks();
+        world.getChunkProvider().queueUnloadAll();
 
         while (loadedChunksDelta >= 100) {
             int loadedBefore = world.getChunkProvider().getLoadedChunkCount();
-            world.getChunkProvider().unloadAllChunks();
+            world.getChunkProvider().queueUnloadAll();
             loadedChunksDelta = loadedBefore - world.getChunkProvider().getLoadedChunkCount();
         }
     }

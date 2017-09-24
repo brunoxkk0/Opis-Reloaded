@@ -16,7 +16,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
     }
 }
@@ -61,11 +61,11 @@ dependencies {
     shade 'org.jfree:jfreechart:1.0.17'
     shade 'com.miglayout:miglayout-swing:4.2'
     shade 'net.sf.opencsv:opencsv:2.3'
-    shade('org.spongepowered:mixin:0.6-SNAPSHOT') {
+    shade('org.spongepowered:mixin:0.7.2-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
     }
-    compile 'info.journeymap:journeymap-api:1.10.2-1.3'
+    compile 'info.journeymap:journeymap-api:1.12-1.4'
 }
 
 def root = project.projectDir.parentFile

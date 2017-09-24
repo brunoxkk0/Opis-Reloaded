@@ -35,7 +35,7 @@ public class LaggyChunkOverlayFactory {
                 .setFontShadow(true);
 
         // Define the shape
-        MapPolygon polygon = PolygonHelper.createChunkPolygon(chunkCoords.chunkXPos, 70, chunkCoords.chunkZPos);
+        MapPolygon polygon = PolygonHelper.createChunkPolygon(chunkCoords.x, 70, chunkCoords.z);
 
         // Create the overlay
         PolygonOverlay slimeChunkOverlay = new PolygonOverlay(OpisMod.MODID, id, dimension, shapeProps, polygon);

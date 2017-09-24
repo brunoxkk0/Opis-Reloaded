@@ -17,10 +17,13 @@ public class OpisServerEventHandler {
         if (printEntityTrace) {
 
             if (event.getEntity() instanceof EntityItem) {
-                System.out.printf("Entity %s of type %s [ %s ] created\n", event.getEntity().getEntityId(), event.getEntity().getClass().getName(), ((EntityItem) (event.getEntity())).getEntityItem().getDisplayName());
+                System.out.printf("Entity %s of type %s [ %s ] created\n", event.getEntity().getEntityId(),
+                        event.getEntity().getClass().getName(),
+                        ((EntityItem) (event.getEntity())).getItem().getDisplayName());
 
             } else {
-                System.out.printf("Entity %s of type %s created\n", event.getEntity().getEntityId(), event.getEntity().getClass().getName());
+                System.out.printf("Entity %s of type %s created\n", event.getEntity().getEntityId(),
+                        event.getEntity().getClass().getName());
             }
 
             if (printEntityFull) {

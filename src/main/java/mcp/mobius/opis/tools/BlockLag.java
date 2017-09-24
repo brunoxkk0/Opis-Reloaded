@@ -7,9 +7,10 @@ import net.minecraft.world.World;
 
 public class BlockLag extends BlockContainer {
 
-    public BlockLag(Material par2Material) {
-        super(par2Material);
-        this.setUnlocalizedName("Lag Generator");
+    public BlockLag() {
+        super(Material.WOOD);
+        setUnlocalizedName("Lag Generator");
+        setRegistryName("lag_gen");
     }
 
     @Override

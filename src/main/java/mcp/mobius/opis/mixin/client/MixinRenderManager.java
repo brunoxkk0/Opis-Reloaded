@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinRenderManager {
 
     @Inject(method = "doRenderEntity", at = @At("HEAD"))
-    public void doRenderEntityStart(Entity entity, double x, double y, double z, float p_147939_8_, float partialTicks, boolean p_147939_10_, CallbackInfo ci) {
+    public void renderEntityStart(Entity entity, double x, double y, double z, float yaw, float partialTicks, boolean p_147939_10_, CallbackInfo ci) {
         ProfilerSection.RENDER_ENTITY.start(entity);
     }
 
     @Inject(method = "doRenderEntity", at = @At("HEAD"))
-    public void doRenderEntityStop(Entity entity, double x, double y, double z, float p_147939_8_, float partialTicks, boolean p_147939_10_, CallbackInfo ci) {
+    public void renderEntityStop(Entity entity, double x, double y, double z, float yaw, float partialTicks, boolean p_147939_10_, CallbackInfo ci) {
         ProfilerSection.RENDER_ENTITY.start(entity);
     }
 
