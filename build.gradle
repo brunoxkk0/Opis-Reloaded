@@ -129,4 +129,3 @@ processResources
     }
 
 }
-reobf.jar.mappingType = 'SEARGE'

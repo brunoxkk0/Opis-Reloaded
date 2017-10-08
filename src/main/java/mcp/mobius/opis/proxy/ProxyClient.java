@@ -55,7 +55,7 @@ public class ProxyClient extends CommonProxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        fontMC8 = Fonts.createFont(new ResourceLocation("opis", "fonts/LiberationMono-Bold.ttf"), 14, true);
+        fontMC8 = Fonts.createFont(new ResourceLocation("opis", "fonts/liberationmono-bold.ttf"), 14, true);
 
         IMessageHandler panelSummary = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelSummary(), "Summary");
 

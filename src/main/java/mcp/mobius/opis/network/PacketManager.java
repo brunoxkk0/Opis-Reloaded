@@ -1,14 +1,17 @@
 package mcp.mobius.opis.network;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import mcp.mobius.opis.OpisMod;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -115,6 +118,8 @@ public class PacketManager {
 
         @Override
         public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, PacketBase packet) {
+            OpisMod.LOGGER.warn(source.toString());
+            // TODO can no longer call array on bytebuf see https://github.com/SpongePowered/SpongeForge/issues/1657#issuecomment-316110022
             ByteArrayDataInput input = ByteStreams.newDataInput(source.array());
             input.skipBytes(1); // skip the packet identifier byte
             packet.decode(input);

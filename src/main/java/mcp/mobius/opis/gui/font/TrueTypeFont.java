@@ -1,7 +1,9 @@
 package mcp.mobius.opis.gui.font;
 
+import mcp.mobius.opis.OpisMod;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -99,7 +101,7 @@ public class TrueTypeFont {
         this.antiAlias = antiAlias;
 
         createSet(additionalChars);
-        System.out.println("TrueTypeFont loaded: " + font + " - AntiAlias = " + antiAlias);
+        OpisMod.LOGGER.info("TrueTypeFont loaded: " + font + " - AntiAlias = " + antiAlias);
         fontHeight -= 1;
         if (fontHeight <= 0) {
             fontHeight = 1;
@@ -468,7 +470,7 @@ public class TrueTypeFont {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(-1);
+            FMLCommonHandler.instance().exitJava(-1,false);
         }
 
         return -1;
