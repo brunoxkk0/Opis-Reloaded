@@ -55,7 +55,7 @@ public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITa
 
                 rawdata.array.stream().map((o) -> (DataEntityPerClass) o).forEachOrdered((data) -> {
                     model.addRow(new Object[]{data.name, data.nents, data.update, new DataTiming(data.update.timing / data.nents)});
-            });
+                });
 
                 this.getTable().dataUpdated(row);
 

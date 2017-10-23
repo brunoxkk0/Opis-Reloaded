@@ -22,9 +22,7 @@ import mcp.mobius.opis.swing.panels.PanelSummary;
 import mcp.mobius.opis.swing.panels.debug.PanelOrphanTileEntities;
 import mcp.mobius.opis.swing.panels.debug.PanelThreads;
 import mcp.mobius.opis.swing.panels.network.PanelInbound;
-import mcp.mobius.opis.swing.panels.network.PanelInbound250;
 import mcp.mobius.opis.swing.panels.network.PanelOutbound;
-import mcp.mobius.opis.swing.panels.network.PanelOutbound250;
 import mcp.mobius.opis.swing.panels.timingclient.PanelEventClient;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
@@ -40,7 +38,6 @@ import mcp.mobius.opis.swing.panels.tracking.PanelAmountEntities;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.swing.panels.tracking.PanelDimensions;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -83,9 +80,7 @@ public class ProxyClient extends CommonProxy {
         TabPanelRegistrar.INSTANCE.registerSection("Network");
         IMessageHandler panelPacketsOut = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelOutbound(), "Outbound", "Network");
         IMessageHandler panelPacketsIn = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelInbound(), "Inbound", "Network");
-        IMessageHandler panelPacketsOut250 = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelOutbound250(), "Outbound 250", "Network");
-        IMessageHandler panelPacketsIn250 = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelInbound250(), "Inbound 250", "Network");
-
+        
         TabPanelRegistrar.INSTANCE.registerSection("Debug");
         IMessageHandler panelOrphanTileEnts = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelOrphanTileEntities(), "Orphan TileEnts", "Debug");
         IMessageHandler panelThreads = (IMessageHandler) TabPanelRegistrar.INSTANCE.registerTab(new PanelThreads(), "Threads", "Debug");
@@ -163,8 +158,6 @@ public class ProxyClient extends CommonProxy {
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_OUTBOUND, panelPacketsOut);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_INBOUND, panelPacketsIn);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_OUTBOUND_250, panelPacketsOut250);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_INBOUND_250, panelPacketsIn250);
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_ORPHAN_TILEENTS_CLEAR, panelOrphanTileEnts);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_ORPHAN_TILEENTS, panelOrphanTileEnts);
@@ -185,9 +178,6 @@ public class ProxyClient extends CommonProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        if (!Loader.isModLoaded("journeymap")) {
-            OpisMod.LOGGER.info("JourneyMap not loaded.");
-        }
     }
 
     @Override
@@ -205,11 +195,7 @@ public class ProxyClient extends CommonProxy {
                 break;
             }
             case CLIENT_SHOW_RENDER_TICK: {
-                OpisMod.LOGGER.log(Level.INFO, "=== RENDER TICK ===");
-                //ArrayList<DataHandler> stats = TickHandlerManager.getCumulatedStatsServer();
-                //for (DataHandler stat : stats){
-                //	System.out.printf("%s \n", stat);
-                //}			
+                OpisMod.LOGGER.log(Level.INFO, "=== RENDER TICK ===");			
                 break;
             }
             default:

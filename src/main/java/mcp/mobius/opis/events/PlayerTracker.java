@@ -15,7 +15,6 @@ import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.swing.SelectedTab;
-import mcp.mobius.opis.swing.SwingUI;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

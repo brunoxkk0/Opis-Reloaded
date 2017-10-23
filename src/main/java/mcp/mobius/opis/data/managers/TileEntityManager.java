@@ -35,30 +35,7 @@ public enum TileEntityManager {
         return chunks;
     }
 
-    private void cleanUpStats() {
-
-        /* 
-		HashSet<CoordinatesBlock> dirty = new HashSet<CoordinatesBlock>();
-		
-		for (CoordinatesBlock tecoord : TileEntityManager.stats.keySet()){
-				World world     = DimensionManager.getWorld(tecoord.dim);
-				int   blockID   = world.getBlockId(tecoord.x, tecoord.y, tecoord.z);
-				short blockMeta = (short)world.getBlockMetadata(tecoord.x, tecoord.y, tecoord.z);
-				
-				if ((blockID != TileEntityManager.stats.get(tecoord).getID()) || (blockMeta != TileEntityManager.stats.get(tecoord).getMeta())){
-					dirty.add(tecoord);
-				}
-		}
-		
-		for (CoordinatesBlock tecoord : dirty){
-			stats.remove(tecoord);
-			references.remove(tecoord);
-		}
-         */
-    }
-
     public ArrayList<DataBlockTileEntity> getTileEntitiesInChunk(CoordinatesChunk coord) {
-        cleanUpStats();
 
         ArrayList<DataBlockTileEntity> returnList = new ArrayList<>();
 

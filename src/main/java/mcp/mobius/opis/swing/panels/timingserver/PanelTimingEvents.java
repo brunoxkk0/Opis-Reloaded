@@ -54,8 +54,8 @@ public class PanelTimingEvents extends JPanelMsgHandler implements ITabPanel {
                 int row = this.getTable().clearTable(DataEvent.class);
 
                 rawdata.array.stream().map((o) -> (DataEvent) o).forEachOrdered((data) -> {
-                    model.addRow(new Object[]{data.event, data.mod, data.package_, data.handler, data.nCalls, data.update});
-            });
+                    model.addRow(new Object[]{data.event, data.mod, data.class_, data.handler, data.nCalls, data.update});
+                });
 
                 this.getTable().dataUpdated(row);
 

@@ -25,8 +25,7 @@ public class NetDataList extends PacketBase {
         output.writeInt(this.msg.ordinal());
         output.writeInt(this.array.size());
 
-        if (this.array.size() > 0) //Packet.writeString(data.get(0).getClass().getCanonicalName(), ostream);
-        {
+        if (this.array.size() > 0) {
             output.writeInt(DataType.getForClass(this.array.get(0).getClass()).ordinal());
         }
 

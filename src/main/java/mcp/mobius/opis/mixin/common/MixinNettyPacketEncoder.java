@@ -1,4 +1,4 @@
-package mcp.mobius.opis.mixin.server;
+package mcp.mobius.opis.mixin.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,6 +19,6 @@ public abstract class MixinNettyPacketEncoder {
 
     @Inject(method = "encode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Packet;writePacketData(Lnet/minecraft/network/PacketBuffer;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     protected void onEncode(ChannelHandlerContext context, Packet packet, ByteBuf byteBuf, CallbackInfo ci, EnumConnectionState enumconnectionstate, Integer value, PacketBuffer buffer) throws IOException, Exception {
-        ProfilerSection.PACKET_OUTBOUND.start(packet, buffer.capacity());
+        ProfilerSection.PACKET_OUTBOUND.start(packet);
     }
 }

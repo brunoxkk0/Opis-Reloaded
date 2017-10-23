@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import net.minecraftforge.fml.relauncher.*;
 
 /**
- * @author abrarsyed This is the base packet type for tall the SecretRoomsMod
+ * @author abrarsyed This is the base packet type for all the SecretRoomsMod
  * network stuff. Any class that extends this should have an empty constructor,
  * otherwise the network system will fail.
  */

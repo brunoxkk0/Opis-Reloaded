@@ -22,7 +22,7 @@ import mcp.mobius.opis.network.enums.AccessLevel;
  * number of the button that was clicked.
  *
  */
-public class JTableButton extends AbstractCellEditor
+public final class JTableButton extends AbstractCellEditor
         implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
 
     private final JTable table;
@@ -46,6 +46,7 @@ public class JTableButton extends AbstractCellEditor
      * @param table the table containing the button renderer/editor
      * @param action the Action to be invoked when the button is invoked
      * @param column the column to which the button renderer/editor is added
+     * @param level
      */
     public JTableButton(JTable table, ActionListener action, int column, AccessLevel level) {
         this.table = table;
@@ -122,9 +123,6 @@ public class JTableButton extends AbstractCellEditor
         return editorValue;
     }
 
-//
-//  Implement TableCellRenderer interface
-//
     @Override
     public Component getTableCellRendererComponent(
             JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -142,7 +140,6 @@ public class JTableButton extends AbstractCellEditor
             renderButton.setBorder(originalBorder);
         }
 
-//		renderButton.setText( (value == null) ? "" : value.toString() );
         if (value == null) {
             renderButton.setText("");
             renderButton.setIcon(null);
@@ -157,12 +154,6 @@ public class JTableButton extends AbstractCellEditor
         return renderButton;
     }
 
-//
-//  Implement ActionListener interface
-//
-    /*
-	 *	The button has been pressed. Stop editing and invoke the custom Action
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
         int row = table.convertRowIndexToModel(table.getEditingRow());
@@ -171,14 +162,6 @@ public class JTableButton extends AbstractCellEditor
         action.actionPerformed(e);
     }
 
-//
-//  Implement MouseListener interface
-//
-    /*
-	 *  When the mouse is pressed the editor is invoked. If you then then drag
-	 *  the mouse to another cell before releasing it, the editor is still
-	 *  active. Make sure editing is stopped when the mouse is released.
-     */
     @Override
     public void mousePressed(MouseEvent e) {
         if (table.isEditing()

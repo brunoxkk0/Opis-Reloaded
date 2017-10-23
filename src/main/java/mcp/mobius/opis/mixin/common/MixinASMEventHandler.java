@@ -1,4 +1,4 @@
-package mcp.mobius.opis.mixin.server;
+package mcp.mobius.opis.mixin.common;
 
 import mcp.mobius.opis.data.profilers.ProfilerSection;
 import net.minecraftforge.fml.common.ModContainer;

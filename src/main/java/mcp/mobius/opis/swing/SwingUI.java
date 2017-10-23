@@ -19,8 +19,6 @@ import java.util.HashSet;
 
 import javax.swing.SwingConstants;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
@@ -147,7 +145,6 @@ public final class SwingUI extends JFrame implements WindowListener, ChangeListe
         EventQueue.invokeLater(() -> {
             swingOpen = true;
             setVisible(true);
-            //Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
             PacketManager.sendToServer(new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(SelectedTab.SUMMARY.ordinal())));
         });
     }

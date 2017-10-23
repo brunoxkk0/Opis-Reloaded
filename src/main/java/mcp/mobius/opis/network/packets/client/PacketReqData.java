@@ -72,13 +72,8 @@ public class PacketReqData extends PacketBase {
 
     @Override
     public void actionServer(World world, EntityPlayerMP player) {
-        String logmsg = String.format("Received request %s from player %s ... ", this.dataReq, player.getGameProfile().getName());
-
         if (this.dataReq.canPlayerUseCommand(player)) {
-            logmsg += "Accepted";
             ServerMessageHandler.instance().handle(this.dataReq, this.param1, this.param2, player);
-        } else {
-            logmsg += "Rejected";
         }
     }
 }

@@ -4,14 +4,11 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
-import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.enums.AccessLevel;
 
 public class PacketReqChunks extends PacketBase {
 
@@ -46,24 +43,6 @@ public class PacketReqChunks extends PacketBase {
 
     @Override
     public void actionServer(World world, EntityPlayerMP player) {
-        if (PlayerTracker.INSTANCE.getPlayerAccessLevel(player).ordinal() > AccessLevel.PRIVILEGED.ordinal()) {
-            ArrayList<Chunk> list = new ArrayList();
-
-            if (world != null) {
-                chunks.forEach((chunk) -> {
-                    list.add(world.getChunkFromChunkCoords(chunk.chunkX, chunk.chunkZ));
-                }); 
-                /**
-                    if (!list.isEmpty()) {
-                        Packet_Chunks.send(castedPacket.dim, !world.provider.hasNoSky, list, player);
-                        Packet250CustomPayload chunkPacket = Packet_Chunks.create(castedPacket.dim, !world.provider.hasNoSky, list);
-                        if (chunkPacket != null)
-                            PacketDispatcher.sendPacketToPlayer( chunkPacket, player);              
-                        }
-                    }
-                **/
-            }
-        }
 
     }
 

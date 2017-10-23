@@ -14,8 +14,8 @@ public class MetaManager {
 
         ProfilerSection.resetAll(Side.SERVER);
         ProfilerSection.desactivateAll(Side.SERVER);
-        //ProfilerSection.resetAll(Side.CLIENT);
-        //ProfilerSection.desactivateAll(Side.CLIENT);		
+        ProfilerSection.resetAll(Side.CLIENT);
+        ProfilerSection.desactivateAll(Side.CLIENT);		
     }
 
 }

@@ -65,7 +65,6 @@ dependencies {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
     }
-    compile 'info.journeymap:journeymap-api:1.12-1.4'
 }
 
 def root = project.projectDir.parentFile
@@ -82,17 +81,12 @@ sourceSets {
     }
 }
 
-task devJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'dev'
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
 artifacts {
-    archives sourceJar, devJar
+    archives sourceJar
 }
 
 jar {

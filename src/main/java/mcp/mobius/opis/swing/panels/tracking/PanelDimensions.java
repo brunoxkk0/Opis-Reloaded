@@ -43,7 +43,6 @@ public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler
         table.setShowGrid(false);
         scrollPane.setViewportView(table);
 
-        JTableButton buttonColumn = new JTableButton(table, new ActionDimensions(), 9, AccessLevel.PRIVILEGED);
     }
 
     @Override

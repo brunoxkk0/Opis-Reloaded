@@ -23,8 +23,6 @@ public enum StringCache implements IMessageHandler {
     INSTANCE;
 
     private int currentIndex = -1;
-    //private HashBiMap<Integer, String>  cache  = HashBiMap.create();
-    //private ArrayList<DataStringUpdate> toSend = new ArrayList<DataStringUpdate>();
     private final BiMap<Integer, String> cache = Maps.synchronizedBiMap(HashBiMap.<Integer, String>create());
     private final ConcurrentLinkedQueue<DataStringUpdate> fullsync = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<DataStringUpdate> unsynced = new ConcurrentLinkedQueue<>();	// This is the current list of unsynced
@@ -52,7 +50,6 @@ public enum StringCache implements IMessageHandler {
                 this.fullsync.add(upd);
                 this.unsynced.add(upd);
 
-                //PacketManager.sendToAll(new NetDataValue(Message.STATUS_STRINGUPD, upd));
                 return currentIndex;
             }
         }

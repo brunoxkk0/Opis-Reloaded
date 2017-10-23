@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.nio.*;
 import java.util.*;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * A TrueType font implementation originally for Slick, modified to use
@@ -470,7 +471,7 @@ public class TrueTypeFont {
 
         } catch (Exception e) {
             e.printStackTrace();
-            FMLCommonHandler.instance().exitJava(-1,false);
+            FMLCommonHandler.instance().exitJava(-1, false);
         }
 
         return -1;

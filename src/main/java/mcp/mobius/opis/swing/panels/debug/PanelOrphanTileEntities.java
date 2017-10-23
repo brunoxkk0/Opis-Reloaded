@@ -50,7 +50,6 @@ public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPan
 
                 this.getTable().addTableData(rawdata.array);
                 DefaultTableModel model = this.getTable().getModel();
-                //int               row   = this.updateData(table, model, DataTileEntity.class);
                 rawdata.array.stream().map((o) -> (DataTileEntity) o).forEachOrdered((data) -> {
                     model.addRow(new Object[]{
                         data.clazz,
@@ -58,21 +57,18 @@ public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPan
                         data.cause,
                         data.pos.dim,
                         String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),});
-            });
-
+                });
                 this.getTable().dataUpdated(row);
-
                 break;
             }
-
             case LIST_ORPHAN_TILEENTS_CLEAR: {
                 this.getTable().clearTableData();
-                DefaultTableModel model = this.getTable().getModel();
                 row = this.getTable().clearTable(DataTileEntity.class);
+                break;
             }
-
-            default:
+            default: {
                 return false;
+            }
 
         }
         return true;

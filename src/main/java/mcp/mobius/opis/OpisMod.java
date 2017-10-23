@@ -105,7 +105,6 @@ public class OpisMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        ModIdentification.init();
         proxy.postInit(event);
     }
 

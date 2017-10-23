@@ -24,22 +24,17 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
     private final JButtonAccess btnRun;
     private final JButtonAccess btnPull;
     private final JButtonAccess btnTeleport;
-    private final JButtonAccess btnCenter;
     private final JLabel lblSummary;
 
     public PanelTimingEntities() {
         setLayout(new MigLayout("", "[][][][grow][]", "[][grow][]"));
 
-        btnCenter = new JButtonAccess("Center Map", AccessLevel.NONE);
-        add(btnCenter, "cell 0 0");
-        btnCenter.addActionListener(new ActionTimingEntities());
-
         btnTeleport = new JButtonAccess("Teleport", AccessLevel.PRIVILEGED);
-        add(btnTeleport, "cell 1 0");
+        add(btnTeleport, "cell 0 0");
         btnTeleport.addActionListener(new ActionTimingEntities());
 
         btnPull = new JButtonAccess("Pull", AccessLevel.PRIVILEGED);
-        add(btnPull, "cell 2 0");
+        add(btnPull, "cell 1 0");
         btnPull.addActionListener(new ActionTimingEntities());
 
         btnRun = new JButtonAccess("Run Opis", AccessLevel.PRIVILEGED);
@@ -71,10 +66,6 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
         return btnTeleport;
     }
 
-    public JButton getBtnCenter() {
-        return btnCenter;
-    }
-
     public JLabel getLblSummary() {
         return lblSummary;
     }
@@ -91,13 +82,15 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
                 int row = this.getTable().clearTable(DataEntity.class);
 
                 rawdata.array.stream().map((o) -> (DataEntity) o).forEachOrdered((data) -> {
-                    model.addRow(new Object[]{data.name.str,
+                    model.addRow(new Object[]{
+                        data.name.str,
                         data.eid,
                         data.pos.dim,
                         String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
                         data.update,
-                        data.npoints});
-            });
+                        data.npoints
+                    });
+                });
 
                 this.getTable().dataUpdated(row);
 

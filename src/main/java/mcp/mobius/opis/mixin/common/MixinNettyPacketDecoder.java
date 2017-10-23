@@ -1,4 +1,4 @@
-package mcp.mobius.opis.mixin.server;
+package mcp.mobius.opis.mixin.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,6 +19,6 @@ public abstract class MixinNettyPacketDecoder {
 
     @Inject(method = "decode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Packet;readPacketData(Lnet/minecraft/network/PacketBuffer;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     protected void onDecode(ChannelHandlerContext context, ByteBuf byteBuf, List<Object> objList, CallbackInfo ci, PacketBuffer buffer, int value, Packet packet) throws IOException, InstantiationException, IllegalAccessException, Exception {
-        ProfilerSection.PACKET_INBOUND.start(packet, buffer.capacity());
+        ProfilerSection.PACKET_INBOUND.start(packet);
     }
 }

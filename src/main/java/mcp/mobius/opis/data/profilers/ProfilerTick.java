@@ -12,12 +12,11 @@ public class ProfilerTick extends ProfilerAbstract {
 
     @Override
     public void reset() {
-        //this.data.clear();
+        this.data.clear();
     }
 
     @Override
     public void start() {
-        //DeadManSwitch.instance.setTimer(System.nanoTime());
         this.clock.start();
     }
 
