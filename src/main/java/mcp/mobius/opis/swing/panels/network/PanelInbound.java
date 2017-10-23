@@ -5,10 +5,10 @@ import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
 import mcp.mobius.opis.api.ITabPanel;
+import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataAmountRate;
 import mcp.mobius.opis.data.holders.newtypes.DataByteRate;
 import mcp.mobius.opis.data.holders.newtypes.DataByteSize;
-import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
@@ -16,6 +16,7 @@ import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
 
 import javax.swing.table.DefaultTableModel;
+import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 
 public class PanelInbound extends JPanelMsgHandler implements ITabPanel {
 
@@ -26,9 +27,9 @@ public class PanelInbound extends JPanelMsgHandler implements ITabPanel {
         add(scrollPane, "cell 0 0,grow");
 
         table = new JTableStats(
-                new String[]{"Type", "ID", "Amount", "Rate", "Total Size"},
-                new Class[]{String.class, Integer.class, DataAmountRate.class, DataByteRate.class, DataByteSize.class},
-                new int[]{SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.RIGHT}
+                new String[]{"Channel", "Amount", "Rate", "Total Size"},
+                new Class[]{CachedString.class, DataAmountRate.class, DataByteRate.class, DataByteSize.class},
+                new int[]{SwingConstants.LEFT, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.RIGHT}
         );
         scrollPane.setViewportView(table);
     }
@@ -44,10 +45,9 @@ public class PanelInbound extends JPanelMsgHandler implements ITabPanel {
                 DefaultTableModel model = this.getTable().getModel();
                 int row = this.getTable().clearTable(DataPacket.class);
 
-                rawdata.array.stream().map((o) -> (DataPacket) o).filter((packet) -> !(packet.type.equals("<UNUSED>"))).forEachOrdered((packet) -> {
+                rawdata.array.stream().map((o) -> (DataPacket) o).forEachOrdered((packet) -> {
                     model.addRow(new Object[]{
-                        packet.type,
-                        packet.id,
+                        packet.channel,
                         packet.amount,
                         packet.rate,
                         packet.size

@@ -1,4 +1,4 @@
-package mcp.mobius.opis.mixin.server;
+package mcp.mobius.opis.mixin.common;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;

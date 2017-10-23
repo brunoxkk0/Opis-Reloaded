@@ -1,15 +1,15 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import net.minecraft.network.Packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.ISerializable;
+import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
 public class DataPacket implements ISerializable {
 
-    public int id;
+    public CachedString channel;
     public DataByteSize size;
     public DataByteRate rate;
     public DataAmountRate amount;
@@ -18,24 +18,15 @@ public class DataPacket implements ISerializable {
     public DataPacket() {
     }
 
-    public DataPacket(Packet packet) {
+    public DataPacket(FMLProxyPacket packet) {
+        this.channel = new CachedString(packet.channel());
         this.type = new CachedString(packet.getClass().getSimpleName());
         this.size = new DataByteSize(0);
         this.rate = new DataByteRate(0, 5);
         this.amount = new DataAmountRate(0, 5);
     }
 
-    public DataPacket fill(Packet packet, int pktsize) {
-        /*
-		PacketBuffer buff = new PacketBuffer(Unpooled.buffer());
-		int pktsize = 0;
-		try{
-			packet.writePacketData(buff);
-			pktsize = buff.readableBytes();
-		} catch (Exception e){
-			
-		}
-         */
+    public DataPacket fill(FMLProxyPacket packet, int pktsize) {
         this.size.size += pktsize;
         this.rate.size += pktsize;
         this.amount.size += 1;
@@ -49,6 +40,7 @@ public class DataPacket implements ISerializable {
 
     @Override
     public void writeToStream(ByteArrayDataOutput stream) {
+        this.channel.writeToStream(stream);
         this.size.writeToStream(stream);
         this.rate.writeToStream(stream);
         this.amount.writeToStream(stream);
@@ -57,6 +49,7 @@ public class DataPacket implements ISerializable {
 
     public static DataPacket readFromStream(ByteArrayDataInput stream) {
         DataPacket retVal = new DataPacket();
+        retVal.channel = CachedString.readFromStream(stream);
         retVal.size = DataByteSize.readFromStream(stream);
         retVal.rate = DataByteRate.readFromStream(stream);
         retVal.amount = DataAmountRate.readFromStream(stream);

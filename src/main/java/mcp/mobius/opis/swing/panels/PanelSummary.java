@@ -28,7 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
-import mcp.mobius.opis.data.holders.newtypes.DataNetworkTick;
 
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -61,7 +60,6 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
     private final JTabbedPane tabGraphs;
 
     private final DescriptiveStatistics pingData = new DescriptiveStatistics(5);
-    private long nPings = 0;
 
     /**
      * Create the panel.
@@ -273,9 +271,6 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
             xyPlotTick.addRangeMarker(marker);
         }
 
-        //ValueMarker marker = new ValueMarker(50.0);
-        //marker.setPaint(Color.red);
-        //xyPlot.addRangeMarker(marker);
         return new ChartPanel(chart);
     }
 
@@ -290,10 +285,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
             marker.setPaint(Color.black);
             xyPlotPing.addRangeMarker(marker);
         }
-
-        //ValueMarker marker = new ValueMarker(50.0);
-        //marker.setPaint(Color.red);
-        //xyPlot.addRangeMarker(marker);
+        
         return new ChartPanel(chart);
     }
 
@@ -343,7 +335,6 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
     }
 
     private DataTimingMillisecond getProfiledTickTotalTime() {
-        //return new DataTimingMillisecond(timingWorldTickTotal.timing + timingTileEntsTotal.timing + timingEntitiesTotal.timing + timingHandlersTotal.timing + timingNetworkTotal.timing);
         return new DataTimingMillisecond(timingWorldTickTotal.timing + timingTileEntsTotal.timing + timingEntitiesTotal.timing + timingHandlersTotal.timing);
     }
 
@@ -381,8 +372,6 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 break;
             }
             case VALUE_TIMING_NETWORK: {
-                //this.timingNetworkTotal = ((DataNetworkTick) rawdata.value).update.asMillisecond();
-                //this.getLblTimingNetwork().setText(this.timingNetworkTotal.toString());
                 break;
             }
             case VALUE_TIMING_TILEENTS: {
@@ -456,13 +445,10 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
 
             case STATUS_PING: {
                 this.pingData.addValue(System.nanoTime() - ((SerialLong) rawdata.value).value);
-                this.nPings += 1;
 
-                //if (this.nPings % 2 == 0){
                 DataTiming timing = new DataTiming(this.pingData.getGeometricMean());
                 this.setTimingPing(timing);
                 this.getLblTimingPing().setText(timing.asMillisecond().toString());
-                //}
                 break;
             }
 

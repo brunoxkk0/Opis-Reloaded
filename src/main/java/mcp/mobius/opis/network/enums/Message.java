@@ -29,8 +29,6 @@ public enum Message {
     LIST_DIMENSION_DATA(EnumSet.of(SelectedTab.DIMENSIONS)),
     LIST_PACKETS_OUTBOUND(EnumSet.of(SelectedTab.PACKETOUTBOUND)),
     LIST_PACKETS_INBOUND(EnumSet.of(SelectedTab.PACKETINBOUND)),
-    LIST_PACKETS_OUTBOUND_250(EnumSet.of(SelectedTab.PACKETOUTBOUND250)),
-    LIST_PACKETS_INBOUND_250(EnumSet.of(SelectedTab.PACKETINBOUND250)),
     LIST_ORPHAN_TILEENTS,
     LIST_ORPHAN_TILEENTS_CLEAR,
     LIST_THREADS(EnumSet.of(SelectedTab.THREADS)),
@@ -156,8 +154,6 @@ public enum Message {
         Message.LIST_DIMENSION_DATA.setAccessLevel(level);
         Message.LIST_PACKETS_OUTBOUND.setAccessLevel(level);
         Message.LIST_PACKETS_INBOUND.setAccessLevel(level);
-        Message.LIST_PACKETS_OUTBOUND_250.setAccessLevel(level);
-        Message.LIST_PACKETS_INBOUND_250.setAccessLevel(level);
         Message.LIST_ORPHAN_TILEENTS.setAccessLevel(level);
         Message.LIST_THREADS.setAccessLevel(level);
     }

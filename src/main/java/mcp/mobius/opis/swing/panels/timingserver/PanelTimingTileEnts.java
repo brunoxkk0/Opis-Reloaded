@@ -24,7 +24,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
 
-    private final JButtonAccess btnCenter;
     private final JButtonAccess btnTeleport;
     private final JButtonAccess btnReset;
     private final JButtonAccess btnRun;
@@ -33,17 +32,13 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
     public PanelTimingTileEnts() {
         setLayout(new MigLayout("", "[][][][grow][]", "[][grow][]"));
 
-        btnCenter = new JButtonAccess("Center Map", AccessLevel.NONE);
-        add(btnCenter, "cell 0 0");
-        btnCenter.addActionListener(new ActionTimingTileEnts());
-
         btnTeleport = new JButtonAccess("Teleport", AccessLevel.PRIVILEGED);
-        add(btnTeleport, "cell 1 0");
+        add(btnTeleport, "cell 0 0");
         btnTeleport.addActionListener(new ActionTimingTileEnts());
 
         btnReset = new JButtonAccess("Reset Highlight", AccessLevel.PRIVILEGED);
         btnReset.setEnabled(false);
-        add(btnReset, "cell 2 0");
+        add(btnReset, "cell 1 0");
         btnReset.addActionListener(new ActionTimingTileEnts());
 
         btnRun = new JButtonAccess("Run Opis", AccessLevel.PRIVILEGED);
@@ -61,10 +56,6 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
 
         lblSummary = new JLabel("New label");
         add(lblSummary, "cell 0 2 5 1,alignx center");
-    }
-
-    public JButton getBtnCenter() {
-        return btnCenter;
     }
 
     public JButton getBtnTeleport() {
@@ -103,7 +94,7 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
                         data.pos.dim,
                         String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
                         data.update});
-            });
+                });
 
                 this.getTable().dataUpdated(row);
 

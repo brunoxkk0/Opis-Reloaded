@@ -8,6 +8,7 @@ import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
+import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 import mcp.mobius.opis.data.holders.newtypes.DataThread;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.managers.ChunkManager;
@@ -41,16 +42,6 @@ public enum OpisServerTickHandler {
 
     @SubscribeEvent
     public void tickEnd(TickEvent.ServerTickEvent event) {
-
-        /*
-			if (System.nanoTime() - timer500 >  500000000){
-				timer500 = System.nanoTime();
-				
-				for (Player player : PlayerTracker.instance().playersSwing){
-					PacketDispatcher.sendPacketToPlayer(Packet_DataValue.create(DataReq.VALUE_TIMING_TICK,     TickProfiler.instance().stats), player);					
-				}
-			}
-         */
         StringCache.INSTANCE.syncNewCache();
 
         // One second timer
@@ -112,17 +103,15 @@ public enum OpisServerTickHandler {
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_OUTBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values())));
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_INBOUND, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values())));
 
-            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_OUTBOUND_250, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data250.values())));
-            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_PACKETS_INBOUND_250, new ArrayList<>(((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data250.values())));
-
             ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).startInterval();
             ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).startInterval();
 
-            /*
-				for (DataPacket data : ((ProfilerPacket)ProfilerSection.PACKET_OUTBOUND.getProfiler()).jabbaSpec){
-					System.out.printf("[ %d ] %d %d\n", data.id, data.amount, data.size);
-				}
-             */
+            ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values().forEach((data) -> {
+                System.out.printf("OUTBOUND [ %s ] %d %d\n", data.channel.str, data.amount.size, data.size.size);
+            });
+            ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values().forEach((data) -> {
+                System.out.printf("INBOUND [ %s ] %d %d\n", data.channel.str, data.amount.size, data.size.size);
+            });
         }
 
         profilerUpdateTickCounter++;

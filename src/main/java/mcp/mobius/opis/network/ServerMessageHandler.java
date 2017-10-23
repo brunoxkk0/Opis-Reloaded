@@ -97,10 +97,6 @@ public class ServerMessageHandler {
                     PacketManager.validateAndSend(new NetDataValue(Message.VALUE_TIMING_ENTITIES, totalTime), player);
                     break;
                 }
-                //ArrayList<DataHandler> timingHandlers = TickHandlerManager.getCumulatedStatsServer();
-                //DataTiming totalTime = TickHandlerManager.getTotalUpdateTime();
-                //OpisPacketHandler_OLD.validateAndSend(NetDataList_OLD.create(Message.LIST_TIMING_HANDLERS,  timingHandlers), player);
-                //OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),     player);
                 case LIST_TIMING_HANDLERS:
                     break;
                 case LIST_TIMING_CHUNK: {
@@ -140,15 +136,14 @@ public class ServerMessageHandler {
 
                     ProfilerSection.resetAll(Side.SERVER);
                     ProfilerSection.desactivateAll(Side.SERVER);
-                    //ProfilerSection.resetAll(Side.CLIENT);
-                    //ProfilerSection.desactivateAll(Side.CLIENT);	
+                    ProfilerSection.resetAll(Side.CLIENT);
+                    ProfilerSection.desactivateAll(Side.CLIENT);	
                     OpisMod.profilerRun = true;
                     ProfilerSection.activateAll(Side.SERVER);
                     PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_START, new SerialInt(OpisMod.profilerMaxTicks)));
                     break;
                 case COMMAND_KILLALL:
                     EntityManager.INSTANCE.killAll(((SerialString) param1).value);
-                    //this.handle(Message.LIST_AMOUNT_ENTITIES, null, null, player);
                     break;
                 case COMMAND_UNREGISTER_SWING:
                     PlayerTracker.INSTANCE.playersSwing.remove(player);
@@ -227,7 +222,6 @@ public class ServerMessageHandler {
     public void handleOverlayChunkEntities(CoordinatesChunk coord, EntityPlayerMP player) {
 
         HashMap<CoordinatesChunk, ArrayList<DataEntity>> entities = EntityManager.INSTANCE.getAllEntitiesPerChunk();
-        //HashMap<CoordinatesChunk, Integer> perChunk = new HashMap<CoordinatesChunk, Integer>();
         ArrayList<DataChunkEntities> perChunk = new ArrayList<>();
 
         entities.keySet().forEach((chunk) -> {

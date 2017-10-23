@@ -5,20 +5,22 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_8",
     "refmap": "mixins.opis.refmap.json",
+    "mixins": [
+        "common.MixinFMLOutboundHandler",
+        "common.MixinNettyPacketDecoder",
+        "common.MixinNettyPacketEncoder",
+        "common.MixinNetworkManager",
+        "common.MixinNetworkSystem",
+        "common.MixinASMEventHandler",
+        "common.MixinFMLCommonHandler"
+    ],
+    "server": [
+        "server.MixinWorld",
+        "server.MixinWorldServer"
+    ],
     "client": [
         "client.MixinRenderManager",
         "client.MixinTileEntitySpecialRenderer"
-    ],
-    "server": [
-        "server.MixinASMEventHandler",
-        "server.MixinFMLCommonHandler",
-        "server.MixinWorld",
-        "server.MixinWorldServer",
-        "server.MixinFMLOutboundHandler",
-        "server.MixinNettyPacketDecoder",
-        "server.MixinNettyPacketEncoder",
-        "server.MixinNetworkManager",
-        "server.MixinNetworkSystem"
     ],
     "injectors": {
         "defaultRequire": 1

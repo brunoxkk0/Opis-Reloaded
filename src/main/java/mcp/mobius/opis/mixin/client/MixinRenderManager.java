@@ -18,7 +18,7 @@ public abstract class MixinRenderManager {
 
     @Inject(method = "doRenderEntity", at = @At("HEAD"))
     public void doRenderEntityStop(Entity entity, double x, double y, double z, float p_147939_8_, float partialTicks, boolean p_147939_10_, CallbackInfo ci) {
-        ProfilerSection.RENDER_ENTITY.start(entity);
+        ProfilerSection.RENDER_ENTITY.stop(entity);
     }
 
 }

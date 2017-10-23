@@ -8,7 +8,6 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.api.TabPanelRegistrar;
-import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntityPerClass;
 import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class ActionAmountTileEnts implements ActionListener {
@@ -21,8 +20,6 @@ public class ActionAmountTileEnts implements ActionListener {
         if (table == null || table.getSelectedRow() == -1) {
             return;
         }
-        int indexData = table.convertRowIndexToModel(table.getSelectedRow());
-        DataBlockTileEntityPerClass data = (DataBlockTileEntityPerClass) table.getTableData().get(indexData);
 
         if (e.getSource() == panel.getBtnRefresh()) {
             PacketManager.sendToServer(new PacketReqData(Message.LIST_AMOUNT_TILEENTS));

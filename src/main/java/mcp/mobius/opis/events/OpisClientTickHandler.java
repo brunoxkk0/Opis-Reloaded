@@ -85,8 +85,6 @@ public enum OpisClientTickHandler {
     }
 
     private void updateTabs() {
-        //====================================================================================				
-
         ArrayList<DataTileEntityRender> tileEntData = new ArrayList<>();
         double tileEntTotal = 0.0D;
         for (TileEntity te : ((ProfilerRenderTileEntity) ProfilerSection.RENDER_TILEENTITY.getProfiler()).data.keySet()) {
@@ -105,7 +103,6 @@ public enum OpisClientTickHandler {
         ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).setTable(tileEntData);
         ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).getLblTotal().setText(String.format("Total : %.3f µs", tileEntTotal / 1000.0));
 
-        //====================================================================================
         ArrayList<DataEntityRender> entData = new ArrayList<>();
         double entTotal = 0.0D;
         for (Entity ent : ((ProfilerRenderEntity) ProfilerSection.RENDER_ENTITY.getProfiler()).data.keySet()) {
@@ -123,10 +120,7 @@ public enum OpisClientTickHandler {
         Collections.sort(entData);
         ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).setTable(entData);
         ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).getLblTotal().setText(String.format("Total : %.3f µs", entTotal / 1000.0));
-
-        //====================================================================================	
-        //((PanelRenderHandlers)(TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS))).setTable(TickHandlerManager.getCumulatedStatsRender());
-        //====================================================================================			
+		
         ArrayList<DataRenderEvent> timingEvents = new ArrayList<>();
         HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).data;
         HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataMod;
@@ -135,23 +129,13 @@ public enum OpisClientTickHandler {
         });
         ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).setTable(timingEvents);
 
-        //====================================================================================			
-        //ArrayList<DataBlockRender> blockData = new ArrayList<>();
         ((ProfilerRenderBlock) ProfilerSection.RENDER_BLOCK.getProfiler()).data.keySet().forEach((coord) -> {
             try {
                 DataBlockRender dataBlock = new DataBlockRender().fill(coord);
-                //blockData.add(dataBlock);
             } catch (Exception e) {
                 OpisMod.LOGGER.warn(String.format("Error while adding block %s to the list", coord));
             }
-        }); /*
-        Collections.sort(blockData);
-        for (DataBlockRender data : blockData){
-        ItemStack stack = new ItemStack(data.id, 0, data.meta);
-        String    name  = stack.getDisplayName();
-        System.out.printf("%s %s : %s\n", data.pos, name, data.update);
-        }
-         */
+        });
     }
 
 }

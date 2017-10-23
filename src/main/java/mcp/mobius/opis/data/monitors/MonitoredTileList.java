@@ -9,7 +9,6 @@ import mcp.mobius.opis.OpisMod;
 
 public class MonitoredTileList<E> extends MonitoredList<E> {
 
-    //private Map<String, Integer> count = new HashMap<String, Integer>();
     private final Table<IBlockState, Integer, Integer> count = HashBasedTable.create();
     private final Map<Object, BlockData> blockdata = new WeakHashMap();
 
