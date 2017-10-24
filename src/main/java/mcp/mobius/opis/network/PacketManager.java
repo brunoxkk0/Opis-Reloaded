@@ -25,6 +25,7 @@ import com.google.common.collect.Maps;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import java.util.Arrays;
 
 import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -110,10 +111,10 @@ public class PacketManager {
 
         @Override
         public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, PacketBase packet) {
-            OpisMod.LOGGER.warn(source.toString());
-            // TODO can no longer call array on bytebuf see https://github.com/SpongePowered/SpongeForge/issues/1657#issuecomment-316110022
-            ByteArrayDataInput input = ByteStreams.newDataInput(source.array());
-            input.skipBytes(1); // skip the packet identifier byte
+            final byte[] bytes = new byte[source.capacity()];
+            source.readBytes(bytes);
+            
+            ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
             packet.decode(input);
 
             if (FMLCommonHandler.instance().getSide().isClient()) {

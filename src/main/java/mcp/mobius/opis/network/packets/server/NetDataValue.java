@@ -30,7 +30,6 @@ public class NetDataValue extends PacketBase {
         this.msg = Message.values()[input.readInt()];
         this.clazz = DataType.getForOrdinal(input.readInt());
         this.value = dataRead(this.clazz, input);
-
     }
 
     @Override

@@ -105,13 +105,6 @@ public enum OpisServerTickHandler {
 
             ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).startInterval();
             ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).startInterval();
-
-            ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values().forEach((data) -> {
-                System.out.printf("OUTBOUND [ %s ] %d %d\n", data.channel.str, data.amount.size, data.size.size);
-            });
-            ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values().forEach((data) -> {
-                System.out.printf("INBOUND [ %s ] %d %d\n", data.channel.str, data.amount.size, data.size.size);
-            });
         }
 
         profilerUpdateTickCounter++;
