@@ -1,26 +1,29 @@
 package mcp.mobius.opis;
 
-import java.util.UUID;
-import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.commands.client.CommandOpis;
 import mcp.mobius.opis.commands.server.*;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.profilers.*;
 import mcp.mobius.opis.events.*;
-import mcp.mobius.opis.helpers.ModIdentification;
 import mcp.mobius.opis.network.PacketManager;
-import mcp.mobius.opis.network.enums.*;
-import mcp.mobius.opis.proxy.CommonProxy;
-import mcp.mobius.opis.tools.*;
+import mcp.mobius.opis.proxy.MessageCommonProxy;
+import mcp.mobius.opis.tools.BlockDebug;
+import mcp.mobius.opis.tools.BlockLag;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.apache.logging.log4j.*;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
 
 @Mod(name = OpisMod.NAME, modid = OpisMod.MODID, version = OpisMod.VERSION, acceptableRemoteVersions = "*")
 
@@ -35,63 +38,29 @@ public class OpisMod {
 
     public static final Logger LOGGER = LogManager.getLogger("Opis");
 
-    @SidedProxy(clientSide = "mcp.mobius.opis.proxy.ProxyClient", serverSide = "mcp.mobius.opis.proxy.ProxyServer")
-    public static CommonProxy proxy;
+    public static Configuration config;
 
-    public static int profilerDelay = 1;
+    @SidedProxy(clientSide = "mcp.mobius.opis.proxy.MessageClientProxy", serverSide = "mcp.mobius.opis.proxy.MessageServerProxy")
+    public static MessageCommonProxy messageProxy;
+
     public static boolean profilerRun = false;
     public static boolean profilerRunClient = false;
-    public static int profilerMaxTicks = 250;
-    public static boolean microseconds = true;
-    public static boolean debugBlocks = false;
+
     public static CoordinatesBlock selectedBlock = null;
-
-    public static boolean mappingEnabled = false;
-
-    public Configuration config = null;
-
-    public static String commentTables = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
-    public static String commentOpis = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
-    public static String commentPrivileged = "List of players with PRIVILEGED access level.";
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        config = new Configuration(event.getSuggestedConfigurationFile());
-
-        profilerDelay = config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
-        profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
-        microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
-        debugBlocks = config.get(Configuration.CATEGORY_GENERAL, "debug.blocks", false).getBoolean(false);
-
-        String[] users = config.get("ACCESS_RIGHTS", "privileged", new String[]{}, commentPrivileged).getStringList();
-        AccessLevel minTables = AccessLevel.PRIVILEGED;
-        AccessLevel openOpis = AccessLevel.PRIVILEGED;
-        try {
-            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
-        } catch (IllegalArgumentException e) {
-        }
-        try {
-            minTables = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
-        } catch (IllegalArgumentException e) {
-        }
-
-        Message.setTablesMinimumLevel(minTables);
-        Message.setOpisMinimumLevel(openOpis);
-
-        for (String user : users) {
-            PlayerTracker.INSTANCE.addPrivilegedPlayer(UUID.fromString(user), false);
-        }
-
-        config.save();
+        File directory = event.getModConfigurationDirectory();
+        config = new Configuration(new File(directory.getPath(), "opisreloaded.cfg"));
+        OpisConfig.readConfig();
 
         MinecraftForge.EVENT_BUS.register(new OpisClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new OpisServerEventHandler());
-        FMLCommonHandler.instance().bus().register(OpisClientTickHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(OpisServerTickHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(PlayerTracker.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(OpisClientTickHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(OpisServerTickHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(PlayerTracker.INSTANCE);
 
         PacketManager.init();
-        proxy.preInit(event);
     }
 
     @Mod.EventHandler
@@ -100,12 +69,14 @@ public class OpisMod {
         ProfilerSection.RENDER_ENTITY.setProfiler(new ProfilerRenderEntity());
         ProfilerSection.RENDER_BLOCK.setProfiler(new ProfilerRenderBlock());
         ProfilerSection.EVENT_INVOKE.setProfiler(new ProfilerEvent());
-        proxy.init(event);
+        messageProxy.init(event);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit(event);
+        if (config.hasChanged()) {
+            config.save();
+        }
     }
 
     @Mod.EventHandler
@@ -119,7 +90,6 @@ public class OpisMod {
         ProfilerSection.PACKET_OUTBOUND.setProfiler(new ProfilerPacket());
         ProfilerSection.NETWORK_TICK.setProfiler(new ProfilerNetworkTick());
 
-        event.registerServerCommand(new CommandFrequency());
         event.registerServerCommand(new CommandStop());
         event.registerServerCommand(new CommandTicks());
         event.registerServerCommand(new CommandKill());
@@ -129,5 +99,13 @@ public class OpisMod {
         event.registerServerCommand(new CommandOpis());
         event.registerServerCommand(new CommandAddPrivileged());
         event.registerServerCommand(new CommandRmPrivileged());
+    }
+
+    @SubscribeEvent
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        if (OpisConfig.enableDebugBlocks) {
+            event.getRegistry().register(new BlockLag());
+            event.getRegistry().register(new BlockDebug());
+        }
     }
 }

@@ -2,13 +2,14 @@ package mcp.mobius.opis.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import mcp.mobius.opis.OpisConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
-import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 import mcp.mobius.opis.data.holders.newtypes.DataThread;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.managers.ChunkManager;
@@ -77,7 +78,7 @@ public enum OpisServerTickHandler {
 
             // Profiler update (if running)
             if (OpisMod.profilerRun) {
-                PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUNNING, new SerialInt(OpisMod.profilerMaxTicks)));
+                PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUNNING, new SerialInt(OpisConfig.profilerMaxTicks)));
                 PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_RUN_UPDATE, new SerialInt(profilerRunningTicks)));
             }
             ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).dataAmount = 0L;
@@ -109,14 +110,14 @@ public enum OpisServerTickHandler {
 
         profilerUpdateTickCounter++;
 
-        if (profilerRunningTicks < OpisMod.profilerMaxTicks && OpisMod.profilerRun) {
+        if (profilerRunningTicks < OpisConfig.profilerMaxTicks && OpisMod.profilerRun) {
             profilerRunningTicks++;
-        } else if (profilerRunningTicks >= OpisMod.profilerMaxTicks && OpisMod.profilerRun) {
+        } else if (profilerRunningTicks >= OpisConfig.profilerMaxTicks && OpisMod.profilerRun) {
             profilerRunningTicks = 0;
             OpisMod.profilerRun = false;
             ProfilerSection.desactivateAll(Side.SERVER);
 
-            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_STOP, new SerialInt(OpisMod.profilerMaxTicks)));
+            PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_STOP, new SerialInt(OpisConfig.profilerMaxTicks)));
 
             PlayerTracker.INSTANCE.playersSwing.forEach((player) -> {
                 PacketManager.sendFullUpdate(player);

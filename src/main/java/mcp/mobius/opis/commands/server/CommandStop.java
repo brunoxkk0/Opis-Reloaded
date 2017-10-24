@@ -43,7 +43,7 @@ public class CommandStop extends CommandBase {
         if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) {
             return true;
         }
-        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getGameProfile().getId());
+        return PlayerTracker.INSTANCE.isPrivileged(((EntityPlayerMP) sender).getUniqueID());
     }
 
 }

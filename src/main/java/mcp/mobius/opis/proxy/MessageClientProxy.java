@@ -1,10 +1,5 @@
 package mcp.mobius.opis.proxy;
 
-import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.Level;
-
-import net.minecraft.util.ResourceLocation;
-import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
@@ -13,6 +8,7 @@ import mcp.mobius.opis.data.client.DataCache;
 import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.StringCache;
+import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.gui.font.Fonts;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
 import mcp.mobius.opis.network.PacketBase;
@@ -27,28 +23,21 @@ import mcp.mobius.opis.swing.panels.timingclient.PanelEventClient;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderTileEnts;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingChunks;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEntities;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEntitiesPerClass;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEvents;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingHandlers;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEnts;
-import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEntsPerClass;
+import mcp.mobius.opis.swing.panels.timingserver.*;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountEntities;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.swing.panels.tracking.PanelDimensions;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 
-public class ProxyClient extends CommonProxy {
+public class MessageClientProxy extends MessageCommonProxy {
 
     public static TrueTypeFont fontMC8, fontMC12, fontMC16, fontMC18, fontMC24;
-
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-    }
 
     @Override
     public void init(FMLInitializationEvent event) {
@@ -164,9 +153,9 @@ public class ProxyClient extends CommonProxy {
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_THREADS, panelThreads);
 
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_CLEAR_SELECTION, OpisMod.proxy);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, OpisMod.proxy);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, OpisMod.proxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_CLEAR_SELECTION, OpisMod.messageProxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, OpisMod.messageProxy);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, OpisMod.messageProxy);
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, ChunkManager.INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE);
@@ -176,9 +165,6 @@ public class ProxyClient extends CommonProxy {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD_FULL, StringCache.INSTANCE);
     }
 
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-    }
 
     @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {

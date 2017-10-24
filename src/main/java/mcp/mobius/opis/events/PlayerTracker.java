@@ -1,12 +1,7 @@
 package mcp.mobius.opis.events;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import com.mojang.authlib.GameProfile;
-import java.util.Optional;
-import java.util.UUID;
-
+import mcp.mobius.opis.OpisConfig;
 import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.managers.StringCache;
@@ -19,6 +14,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.UUID;
 
 public enum PlayerTracker {
     INSTANCE;
@@ -47,7 +47,8 @@ public enum PlayerTracker {
             if (FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().canSendCommands(profile) || FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer()) {
                 return AccessLevel.ADMIN;
             }
-        } else if (playerPrivileged.contains(uuid.toString())) {
+        }
+        if (playerPrivileged.contains(uuid.toString())){
             return AccessLevel.PRIVILEGED;
         }
         return AccessLevel.NONE;
@@ -56,8 +57,8 @@ public enum PlayerTracker {
     public void addPrivilegedPlayer(UUID uuid, boolean save) {
         this.playerPrivileged.add(uuid.toString());
         if (save) {
-            OpisMod.instance.config.get("ACCESS_RIGHTS", "privileged", new String[]{}, OpisMod.commentPrivileged).set(playerPrivileged.toArray(new String[]{}));
-            OpisMod.instance.config.save();
+            OpisMod.config.get("ACCESS_RIGHTS", "privilegedUsers", new String[]{}, OpisConfig.commentPrivileged).set(playerPrivileged.toArray(new String[]{}));
+            OpisMod.config.save();
         }
     }
 
@@ -67,12 +68,12 @@ public enum PlayerTracker {
 
     public void rmPrivilegedPlayer(UUID uuid) {
         this.playerPrivileged.remove(uuid.toString());
-        OpisMod.instance.config.get("ACCESS_RIGHTS", "privileged", new String[]{}, OpisMod.commentPrivileged).set(playerPrivileged.toArray(new String[]{}));
-        OpisMod.instance.config.save();
+        OpisMod.config.get("ACCESS_RIGHTS", "privilegedUsers", new String[]{}, OpisConfig.commentPrivileged).set(playerPrivileged.toArray(new String[]{}));
+        OpisMod.config.save();
     }
 
-    public void reloeadPriviligedPlayers() {
-        String[] users = OpisMod.instance.config.get("ACCESS_RIGHTS", "privileged", new String[]{}, OpisMod.commentPrivileged).getStringList();
+    public void reloadPriviligedPlayers() {
+        String[] users = OpisMod.config.get("ACCESS_RIGHTS", "privilegedUsers", new String[]{}, OpisConfig.commentPrivileged).getStringList();
         for (String user : users) {
             PlayerTracker.INSTANCE.addPrivilegedPlayer(UUID.fromString(user), false);
         }

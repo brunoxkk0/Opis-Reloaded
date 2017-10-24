@@ -1,7 +1,7 @@
 package mcp.mobius.opis.commands.server;
 
+import mcp.mobius.opis.OpisConfig;
 import mcp.mobius.opis.events.PlayerTracker;
-import mcp.mobius.opis.OpisMod;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +26,7 @@ public class CommandTicks extends CommandBase {
             return;
         }
         try {
-            OpisMod.profilerMaxTicks = Integer.valueOf(astring[0]);
+            OpisConfig.profilerMaxTicks = Integer.valueOf(astring[0]);
             icommandsender.sendMessage(new TextComponentString(String.format("\u00A7oOpis ticks set to %s ticks.", astring[0])));
 
         } catch (NumberFormatException e) {

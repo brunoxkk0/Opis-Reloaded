@@ -31,7 +31,7 @@ public class CommandAddPrivileged extends CommandBase {
             case 1: {
                 Optional<EntityPlayerMP> player = Optional.ofNullable(FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayerByUsername(args[0]));
                 if (player.isPresent()) {
-                    PlayerTracker.INSTANCE.addPrivilegedPlayer(player.get().getGameProfile().getId());
+                    PlayerTracker.INSTANCE.addPrivilegedPlayer(player.get().getUniqueID());
                     sender.sendMessage(new TextComponentString(String.format("Player %s added to Opis user list", args[0])));
                 } else {
                     sender.sendMessage(new TextComponentString(String.format("Player %s not found.", args[0])));

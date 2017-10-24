@@ -3,14 +3,7 @@ package mcp.mobius.opis.network;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.Level;
-
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.DimensionManager;
-import mcp.mobius.opis.data.profilers.ProfilerSection;
+import mcp.mobius.opis.OpisConfig;
 import mcp.mobius.opis.OpisMod;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -29,6 +22,7 @@ import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.EntityManager;
 import mcp.mobius.opis.data.managers.TileEntityManager;
+import mcp.mobius.opis.data.profilers.ProfilerSection;
 import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.network.enums.Message;
@@ -36,8 +30,14 @@ import mcp.mobius.opis.network.packets.server.NetDataCommand;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.swing.SelectedTab;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 
 public class ServerMessageHandler {
 
@@ -140,7 +140,7 @@ public class ServerMessageHandler {
                     ProfilerSection.desactivateAll(Side.CLIENT);	
                     OpisMod.profilerRun = true;
                     ProfilerSection.activateAll(Side.SERVER);
-                    PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_START, new SerialInt(OpisMod.profilerMaxTicks)));
+                    PacketManager.sendPacketToAllSwing(new NetDataValue(Message.STATUS_START, new SerialInt(OpisConfig.profilerMaxTicks)));
                     break;
                 case COMMAND_KILLALL:
                     EntityManager.INSTANCE.killAll(((SerialString) param1).value);

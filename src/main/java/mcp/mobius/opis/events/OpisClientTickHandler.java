@@ -3,6 +3,7 @@ package mcp.mobius.opis.events;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import mcp.mobius.opis.OpisConfig;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.*;
@@ -70,9 +71,9 @@ public enum OpisClientTickHandler {
 
         profilerUpdateTickCounter++;
 
-        if (profilerRunningTicks < OpisMod.profilerMaxTicks && OpisMod.profilerRunClient) {
+        if (profilerRunningTicks < OpisConfig.profilerMaxTicks && OpisMod.profilerRunClient) {
             profilerRunningTicks++;
-        } else if (profilerRunningTicks >= OpisMod.profilerMaxTicks && OpisMod.profilerRunClient) {
+        } else if (profilerRunningTicks >= OpisConfig.profilerMaxTicks && OpisMod.profilerRunClient) {
             profilerRunningTicks = 0;
             OpisMod.profilerRunClient = false;
             ProfilerSection.desactivateAll(Side.CLIENT);
