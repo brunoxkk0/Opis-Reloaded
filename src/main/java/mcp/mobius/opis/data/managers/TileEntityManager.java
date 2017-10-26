@@ -8,6 +8,7 @@ import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
 import mcp.mobius.opis.OpisMod;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockStateBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -83,7 +84,8 @@ public enum TileEntityManager {
         HashSet<Integer> registeredEntities = new HashSet<>();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-                world.loadedTileEntityList.parallelStream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
+            synchronized (world.loadedTileEntityList) {
+                world.loadedTileEntityList.stream().map((o) -> (TileEntity) o).forEachOrdered((tileEntity) -> {
                     CoordinatesBlock coord = new CoordinatesBlock(world.provider.getDimension(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
                     //This entitie has already been seen;
                     int hash = System.identityHashCode(tileEntity);
@@ -107,6 +109,7 @@ public enum TileEntityManager {
                         }
                     }
                 });
+            }
         }
 
         OpisMod.LOGGER.warn(String.format("Found %d potential orphans !", orphans.size()));
@@ -118,15 +121,17 @@ public enum TileEntityManager {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
 
         for (WorldServer world : DimensionManager.getWorlds()) {
-            world.loadedTileEntityList.parallelStream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
-                Integer id = Block.getIdFromBlock(state.getBlock());
-                Integer meta = state.getBlock().getMetaFromState(state);
+            synchronized (world.loadedTileEntityList) {
+                world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
+                    Integer id = Block.getIdFromBlock(state.getBlock());
+                    Integer meta = state.getBlock().getMetaFromState(state);
 
-                if (!data.contains(id, meta)) {
-                    data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
-                }
-                data.get(id, meta).add();
-            });
+                    if (!data.contains(id, meta)) {
+                        data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                    }
+                    data.get(id, meta).add();
+                });
+            }
         }
 
         return new ArrayList<>(data.values());
