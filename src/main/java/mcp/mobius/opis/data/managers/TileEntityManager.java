@@ -118,22 +118,26 @@ public enum TileEntityManager {
 
     public ArrayList<DataBlockTileEntityPerClass> getCumuativeAmountTileEntities() {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
+        try {
+            for (WorldServer world : DimensionManager.getWorlds()) {
+                synchronized (world.loadedTileEntityList) {
+                    world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
+                        Integer id = Block.getIdFromBlock(state.getBlock());
+                        Integer meta = state.getBlock().getMetaFromState(state);
 
-        for (WorldServer world : DimensionManager.getWorlds()) {
-            synchronized (world.loadedTileEntityList) {
-                world.loadedTileEntityList.stream().map((tile) -> world.getBlockState(tile.getPos())).filter((state) -> (state != null)).forEachOrdered((state) -> {
-                    Integer id = Block.getIdFromBlock(state.getBlock());
-                    Integer meta = state.getBlock().getMetaFromState(state);
-
-                    if (!data.contains(id, meta)) {
-                        data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
-                    }
-                    data.get(id, meta).add();
-                });
+                        if (!data.contains(id, meta)) {
+                            data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
+                        }
+                        data.get(id, meta).add();
+                    });
+                }
             }
+            return new ArrayList<>(data.values());
+        } catch (ConcurrentModificationException e) {
+            OpisMod.LOGGER.error("Happened again for whatever reason..");
+            e.printStackTrace();
         }
-
-        return new ArrayList<>(data.values());
+        return new ArrayList<>();
     }
 
     public ArrayList<DataBlockTileEntityPerClass> getCumulativeTimingTileEntities() {
